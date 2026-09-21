@@ -18,16 +18,16 @@ Implementar el framework completo definido en `technical-specification.md`, util
 
 ## Fase 0 — Gobierno del proyecto
 
-### TASK-FW-001 — Scaffolding del repositorio
+### TASK-FW-001 — Scaffolding del repositorio [x]
 Crear Cargo workspace, crates iniciales, CI y estructura documental.
 
-### TASK-FW-002 — Convenciones de desarrollo
+### TASK-FW-002 — Convenciones de desarrollo [x]
 Definir Rust/MSRV, formato, linting, testing, commits, branches, versionado y reglas de agentes.
 
-### TASK-FW-003 — ADR de arquitectura
+### TASK-FW-003 — ADR de arquitectura [x]
 Formalizar arquitectura hexagonal, límites del core y decisiones iniciales.
 
-### TASK-FW-004 — CI base
+### TASK-FW-004 — CI base [x]
 Implementar pipeline de fmt, clippy, test y build.
 
 ## Fase 1 — Modelo de dominio

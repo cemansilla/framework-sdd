@@ -1,0 +1,19 @@
+[package]
+name = "sdd-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+sdd-core = { path = "../sdd-core" }
+sdd-storage = { path = "../sdd-storage" }
+sdd-parser = { path = "../sdd-parser" }
+sdd-mcp = { path = "../sdd-mcp" }
+sdd-index = { path = "../sdd-index" }
+sdd-integrations = { path = "../sdd-integrations" }
+clap.workspace = true
+tokio.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
