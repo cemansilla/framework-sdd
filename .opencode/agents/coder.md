@@ -3,12 +3,6 @@ name: coder
 description: Escritura, modificación y refactorización de código fuente.
 model: kimi-k2.7-code
 temperature: 0.1
-tools:
-  - read_file
-  - write_file
-  - edit_file
-  - list_dir
-  - run_command
 ---
 
 # Role: Senior Software Developer

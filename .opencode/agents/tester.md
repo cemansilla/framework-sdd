@@ -3,11 +3,6 @@ name: tester
 description: Generación y ejecución de pruebas unitarias y de integración.
 model: deepseek-v4.1-flash
 temperature: 0.0
-tools:
-  - read_file
-  - write_file
-  - edit_file
-  - run_command
 ---
 
 # Role: QA & Test Engineer

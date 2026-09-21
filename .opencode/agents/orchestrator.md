@@ -2,9 +2,6 @@
 name: orchestrator
 description: Agente orquestador general del flujo de trabajo.
 model: qwen3.7-plus
-tools:
-  - read_file
-  - list_dir
 ---
 
 # Role: Project Orchestrator

@@ -3,9 +3,6 @@ name: planner
 description: Desglose de tareas técnicas y plan de desarrollo.
 model: qwen3.7-plus
 temperature: 0.1
-tools:
-  - read_file
-  - write_file
 ---
 
 # Role: Technical Project Planner

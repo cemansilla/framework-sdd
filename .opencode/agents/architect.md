@@ -3,10 +3,6 @@ name: architect
 description: Diseñador de arquitectura de software y contratos de API.
 model: kimi-k3
 temperature: 0.2
-tools:
-  - read_file
-  - list_dir
-  - write_file
 ---
 
 # Role: Software Architect
