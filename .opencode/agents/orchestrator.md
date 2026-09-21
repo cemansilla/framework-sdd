@@ -1,7 +1,7 @@
 ---
 name: orchestrator
 description: Agente orquestador general del flujo de trabajo.
-model: qwen3.7-plus
+model: opencode-go/qwen3.7-plus
 ---
 
 # Role: Project Orchestrator

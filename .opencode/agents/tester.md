@@ -1,7 +1,7 @@
 ---
 name: tester
 description: Generación y ejecución de pruebas unitarias y de integración.
-model: deepseek-v4.1-flash
+model: opencode-go/deepseek-v4.1-flash
 temperature: 0.0
 ---
 

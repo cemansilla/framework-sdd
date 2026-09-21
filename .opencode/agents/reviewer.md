@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Auditoría de seguridad y revisión de calidad de código.
-model: glm-5.3-flash
+model: opencode-go/glm-5.3-flash
 temperature: 0.1
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: coder
 description: Escritura, modificación y refactorización de código fuente.
-model: kimi-k2.7-code
+model: opencode-go/kimi-k2.7-code
 temperature: 0.1
 ---
 

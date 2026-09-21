@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Desglose de tareas técnicas y plan de desarrollo.
-model: qwen3.7-plus
+model: opencode-go/qwen3.7-plus
 temperature: 0.1
 ---
 
