@@ -99,16 +99,18 @@ git push origin main --tags
 
 ## Reglas
 
-1. Nunca commitear directamente en `develop` o `main`.
-2. Siempre actualizar `develop` antes de crear una nueva branch.
-3. Una tarea = un branch = un commit (squash).
-4. Quality gates deben pasar antes del push.
-5. Review `APROBADO` antes del push.
-6. **El agente NUNCA ejecuta `git merge` sobre `develop` o `main`.**
-7. **El agente NUNCA elimina branches remotas.**
-8. El trabajo del agente termina en el push + creación del PR.
-9. El merge y cleanup son responsabilidad exclusiva del usuario.
-10. No mantener branches vivas más de 1 semana.
+1. **El agente SOLO trabaja en su rama de trabajo** (la que creó para la tarea).
+2. **El agente NUNCA trabaja directamente en `develop`, `main` ni ninguna rama ajena a su rama de trabajo.**
+3. **El agente SÍ debe hacer `git push` de su rama de trabajo a remote.**
+4. **El agente NO ejecuta `git merge`, `git rebase` ni `git cherry-pick` sobre `develop` o `main`.**
+5. **El agente NO elimina branches remotas.**
+6. Siempre actualizar `develop` antes de crear una nueva branch.
+7. Una tarea = un branch = un commit (squash).
+8. Quality gates deben pasar antes del push.
+9. Review `APROBADO` antes del push.
+10. El trabajo del agente termina en el push + creación del PR.
+11. El merge y cleanup son responsabilidad exclusiva del usuario.
+12. No mantener branches vivas más de 1 semana.
 
 ## Resolver Conflictos
 

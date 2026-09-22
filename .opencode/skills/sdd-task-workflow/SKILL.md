@@ -95,10 +95,12 @@ El usuario revisa el PR y:
 
 ## Reglas
 
-- Nunca commitear directamente en `develop` o `main`.
+- **El agente SOLO trabaja en su rama de trabajo** (la que creó para la tarea).
+- **El agente NUNCA trabaja directamente en `develop`, `main` ni ninguna rama ajena a su rama de trabajo.**
+- **El agente SÍ debe hacer `git push` de su rama de trabajo a remote.**
+- **El agente NO ejecuta `git merge`, `git rebase` ni `git cherry-pick` sobre `develop` o `main`.**
+- **El agente NO elimina branches remotas.**
 - Una tarea = un branch = un commit (squash).
 - Quality gates deben pasar antes del push.
 - Review debe ser `APROBADO` antes del push.
-- **El agente NUNCA ejecuta `git merge` sobre `develop` o `main`.**
-- **El agente NUNCA elimina branches remotas.**
 - El trabajo del agente termina en el push + creación del PR.

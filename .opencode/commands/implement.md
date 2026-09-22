@@ -26,4 +26,10 @@ Iniciando fase de implementación...
    - Crear Pull Request hacia `develop`.
 10. Reportar al usuario el resultado y el link del PR creado.
 
-**IMPORTANTE: El agente NO ejecuta merge. El merge lo realiza el usuario tras revisar el PR.**
+**Reglas inquebrantables:**
+- El agente SOLO trabaja en su rama de trabajo (la que creó para la tarea).
+- El agente NUNCA trabaja directamente en `develop`, `main` ni ninguna rama ajena a su rama de trabajo.
+- El agente SÍ debe hacer `git push` de su rama de trabajo a remote.
+- El agente NO ejecuta `git merge`, `git rebase` ni `git cherry-pick` sobre `develop` o `main`.
+- El agente NO elimina branches remotas.
+- El merge lo realiza el usuario tras revisar el PR.
