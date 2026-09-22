@@ -22,6 +22,8 @@ Iniciando fase de implementación...
 9. Si `@reviewer` dictamina `APROBADO`:
    - Crear commit convencional: `<tipo>(<scope>): [TASK-ID] <descripcion>`.
    - Marcar la tarea como completada (`[x]`) en `tasks.md`.
-   - Merge a `develop` con squash.
-   - Eliminar branch local.
-10. Reportar al usuario el resultado de la implementación.
+   - Push de la branch a remote.
+   - Crear Pull Request hacia `develop`.
+10. Reportar al usuario el resultado y el link del PR creado.
+
+**IMPORTANTE: El agente NO ejecuta merge. El merge lo realiza el usuario tras revisar el PR.**

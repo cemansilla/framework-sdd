@@ -1,6 +1,6 @@
 ---
 name: branching-sdd
-description: Flujo de branching y merge para el desarrollo SDD. Usar cuando se necesite crear una rama, mergear cambios, resolver conflictos de merge, o entender la estrategia de branching del proyecto.
+description: Flujo de branching y PR para el desarrollo SDD. Usar cuando se necesite crear una rama, push de cambios, resolver conflictos de merge, o entender la estrategia de branching del proyecto. El agente NO mergea directamente, todo pasa por PR.
 ---
 
 # Branching Strategy SDD
@@ -61,21 +61,28 @@ git checkout -b <tipo>/<TASK-ID>_<descripcion>
 - Hacer commits atómicos siguiendo conventional commits.
 - Ejecutar quality gates antes de cada commit.
 
-### 3. Merge a Develop
+### 3. Push y Crear PR
 
 ```bash
-git checkout develop
-git merge --squash <branch-name>
-git commit -m "<tipo>(<scope>): [TASK-ID] <descripcion>"
+git push origin <branch-name>
+gh pr create --base develop --title "<tipo>(<scope>): [TASK-ID] <descripcion>" --body "..."
 ```
 
-### 4. Cleanup
+### 4. Esperar Aprobación del Usuario
 
-```bash
-git branch -d <branch-name>
-```
+- El usuario revisa el PR.
+- El usuario aprueba o pide cambios.
+- Si pide cambios, corregir y pushear nuevos commits.
 
-### 5. Release a Main (cuando corresponda)
+### 5. Merge (REALIZADO POR EL USUARIO)
+
+El usuario mergea el PR via GitHub UI o CLI.
+
+### 6. Cleanup (REALIZADO POR EL USUARIO)
+
+El usuario elimina la branch local y remota después del merge.
+
+### 7. Release a Main (cuando corresponda, REALIZADO POR EL USUARIO)
 
 ```bash
 git checkout main
@@ -95,10 +102,13 @@ git push origin main --tags
 1. Nunca commitear directamente en `develop` o `main`.
 2. Siempre actualizar `develop` antes de crear una nueva branch.
 3. Una tarea = un branch = un commit (squash).
-4. Quality gates deben pasar antes del merge.
-5. Review `APROBADO` antes del merge.
-6. Eliminar branches locales después del merge.
-7. No mantener branches vivas más de 1 semana.
+4. Quality gates deben pasar antes del push.
+5. Review `APROBADO` antes del push.
+6. **El agente NUNCA ejecuta `git merge` sobre `develop` o `main`.**
+7. **El agente NUNCA elimina branches remotas.**
+8. El trabajo del agente termina en el push + creación del PR.
+9. El merge y cleanup son responsabilidad exclusiva del usuario.
+10. No mantener branches vivas más de 1 semana.
 
 ## Resolver Conflictos
 

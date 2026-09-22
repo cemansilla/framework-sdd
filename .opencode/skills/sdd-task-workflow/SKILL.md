@@ -1,6 +1,6 @@
 ---
 name: sdd-task-workflow
-description: "Ejecutar el ciclo completo de una tarea SDD desde branch hasta merge. Usar cuando se necesite implementar una tarea siguiendo el flujo SDD: crear branch, implementar, testear, revisar, commitear y merge a develop."
+description: "Ejecutar el ciclo completo de una tarea SDD desde branch hasta PR. Usar cuando se necesite implementar una tarea siguiendo el flujo SDD: crear branch, implementar, testear, revisar, commitear y crear PR para revisión del usuario."
 ---
 
 # SDD Task Workflow
@@ -15,10 +15,11 @@ description: "Ejecutar el ciclo completo de una tarea SDD desde branch hasta mer
 5. Testear             → @tester genera tests
 6. Revisar             → @reviewer audita
 7. Commit              → conventional commit
-8. Marcar done         → [x] en tasks.md
-9. Merge a develop     → rebase + squash
-10. Cleanup            → eliminar branch local
+8. Push + PR           → crear PR hacia develop
+9. Esperar aprobación  → el usuario revisa y mergea
 ```
+
+**NOTA: El agente NO mergea. El merge lo realiza el usuario.**
 
 ## Paso 1: Leer Tarea
 
@@ -77,29 +78,27 @@ git commit -m "<tipo>(<scope>): [TASK-ID] <descripcion>"
 
 Ver skill `conventional-commits` para formato detallado.
 
-## Paso 8: Marcar Done
-
-Editar `.docs/03-development-tasks.md`:
-- Cambiar `[ ]` a `[x]` en la tarea completada.
-- Actualizar estado si aplica.
-
-## Paso 9: Merge a Develop
+## Paso 8: Push y Crear PR
 
 ```bash
-git checkout develop
-git merge --squash <branch-name>
-git commit -m "<tipo>(<scope>): [TASK-ID] <descripcion>"
+git push origin <branch-name>
+gh pr create --base develop --title "<tipo>(<scope>): [TASK-ID] <descripcion>" --body "## Cambios\n\n- ..."
 ```
 
-## Paso 10: Cleanup
+## Paso 9: Esperar Aprobación
 
-```bash
-git branch -d <branch-name>
-```
+El usuario revisa el PR y:
+- **Aprueba**: El usuario mergea el PR.
+- **Pide cambios**: Corregir y volver al Paso 3.
+
+**El agente NO ejecuta merge. El merge lo realiza el usuario.**
 
 ## Reglas
 
 - Nunca commitear directamente en `develop` o `main`.
 - Una tarea = un branch = un commit (squash).
-- Quality gates deben pasar antes del merge.
-- Review debe ser `APROBADO` antes del merge.
+- Quality gates deben pasar antes del push.
+- Review debe ser `APROBADO` antes del push.
+- **El agente NUNCA ejecuta `git merge` sobre `develop` o `main`.**
+- **El agente NUNCA elimina branches remotas.**
+- El trabajo del agente termina en el push + creación del PR.
