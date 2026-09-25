@@ -81,37 +81,37 @@ Implementar migraciones/versionado de formatos persistentes.
 
 ## Fase 3 — Lifecycle SDD
 
-### TASK-FW-030 — Lifecycle state machine
+### TASK-FW-030 — Lifecycle state machine [x]
 Implementar estados y transiciones.
 
-### TASK-FW-031 — Brainstorming
+### TASK-FW-031 — Brainstorming [x]
 Permitir registrar y estructurar exploración inicial.
 
-### TASK-FW-032 — Brief generation
+### TASK-FW-032 — Brief generation [x]
 Crear y actualizar brief.
 
-### TASK-FW-033 — Discovery
+### TASK-FW-033 — Discovery [x]
 Gestionar preguntas, respuestas, supuestos y riesgos.
 
-### TASK-FW-034 — Requirements
+### TASK-FW-034 — Requirements [x]
 Crear, validar y versionar requisitos.
 
-### TASK-FW-035 — Domain modeling
+### TASK-FW-035 — Domain modeling [x]
 Generar y mantener modelo de dominio.
 
-### TASK-FW-036 — Architecture
+### TASK-FW-036 — Architecture [x]
 Crear y actualizar arquitectura.
 
-### TASK-FW-037 — Technical design
+### TASK-FW-037 — Technical design [x]
 Crear diseño técnico derivado de requisitos y arquitectura.
 
-### TASK-FW-038 — ADR workflow
+### TASK-FW-038 — ADR workflow [x]
 Crear, aprobar, versionar y relacionar ADRs.
 
-### TASK-FW-039 — Planning
+### TASK-FW-039 — Planning [x]
 Crear plan de implementación.
 
-### TASK-FW-040 — Task decomposition
+### TASK-FW-040 — Task decomposition [x]
 Descomponer trabajo y calcular dependencias.
 
 ## Fase 4 — Agents y Skills
