@@ -260,25 +260,25 @@ Implementar transporte y lifecycle.
 
 ## Fase 10 — Change Management
 
-### TASK-FW-130 — Change detection
+### TASK-FW-130 — Change detection [x]
 Detectar cambios originados en cualquier fase.
 
-### TASK-FW-131 — Impact graph
+### TASK-FW-131 — Impact graph [x]
 Resolver artefactos afectados.
 
-### TASK-FW-132 — Documentation synchronization
+### TASK-FW-132 — Documentation synchronization [x]
 Actualizar documentación afectada.
 
-### TASK-FW-133 — Task synchronization
+### TASK-FW-133 — Task synchronization [x]
 Actualizar tareas afectadas.
 
-### TASK-FW-134 — Test synchronization
+### TASK-FW-134 — Test synchronization [x]
 Actualizar/crear tests afectados.
 
-### TASK-FW-135 — Changelog
+### TASK-FW-135 — Changelog [x]
 Registrar cambios.
 
-### TASK-FW-136 — Revalidation
+### TASK-FW-136 — Revalidation [x]
 Determinar qué gates deben repetirse.
 
 ## Fase 11 — Git y trazabilidad externa
