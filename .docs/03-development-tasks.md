@@ -61,22 +61,22 @@ Implementar relaciones entre artefactos y navegación bidireccional.
 
 ## Fase 2 — Persistencia
 
-### TASK-FW-020 — Estructura `.sdd/`
+### TASK-FW-020 — Estructura `.sdd/` [x]
 Crear estructura inicial y templates.
 
-### TASK-FW-021 — Manifest
+### TASK-FW-021 — Manifest [x]
 Implementar manifest/versionado de metadata.
 
-### TASK-FW-022 — Repository ports
+### TASK-FW-022 — Repository ports [x]
 Definir puertos de persistencia en el core.
 
-### TASK-FW-023 — Filesystem adapter
+### TASK-FW-023 — Filesystem adapter [x]
 Implementar almacenamiento atómico.
 
-### TASK-FW-024 — Locks/concurrency
+### TASK-FW-024 — Locks/concurrency [x]
 Evitar corrupción por operaciones concurrentes.
 
-### TASK-FW-025 — Migration system
+### TASK-FW-025 — Migration system [x]
 Implementar migraciones/versionado de formatos persistentes.
 
 ## Fase 3 — Lifecycle SDD
