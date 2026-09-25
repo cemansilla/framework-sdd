@@ -4,6 +4,12 @@ pub mod approval_gates;
 pub mod architecture;
 pub mod artifact;
 pub mod change;
+pub mod change_detection;
+pub mod change_history;
+pub mod change_propagation;
+pub mod change_rollback;
+pub mod change_validation;
+pub mod conflict_resolution;
 pub mod context_bundle;
 pub mod context_cache;
 pub mod context_inspector;
@@ -11,6 +17,7 @@ pub mod context_prioritizer;
 pub mod context_resolver;
 pub mod discovery;
 pub mod execution_history;
+pub mod impact_analysis;
 pub mod lifecycle;
 pub mod lifecycle_engine;
 pub mod lifecycle_phases;
@@ -45,6 +52,22 @@ pub use change::{
     Change, ChangeOrigin, ChangeStatus, ChangeType, ChangelogEntry, ChangelogItem, ImpactAnalysis,
     RiskLevel,
 };
+pub use change_detection::{ChangeDetection, ChangeDetector, DetectedChange, DetectedChangeType};
+pub use change_history::{ChangeHistory, HistoryAction, HistoryEntry};
+pub use change_propagation::{
+    ChangePropagator, PropagationAction, PropagationPlan, PropagationPriority, PropagationStatus,
+    PropagationStep, StepStatus,
+};
+pub use change_rollback::{
+    ChangeRollback, RollbackAction, RollbackPlan, RollbackResult, RollbackStatus, RollbackStep,
+    RollbackStepStatus,
+};
+pub use change_validation::{
+    ChangeValidator, ValidationCheck, ValidationResult as ChangeValidationResult,
+};
+pub use conflict_resolution::{
+    Conflict, ConflictResolution, ConflictResolver, ConflictType, ResolutionStrategy,
+};
 pub use context_bundle::{
     ContextBundle, ContextError, ContextFragment, ContextPriority, ContextSource, DiscardedElement,
     TokenBudget,
@@ -59,6 +82,10 @@ pub use discovery::{
 };
 pub use execution_history::{
     ExecutionHistory, ExecutionMetrics, ExecutionRecord, ExecutionRecordStatus,
+};
+pub use impact_analysis::{
+    EffortEstimate, ImpactAnalyzer, ImpactLevel, ImpactNode, ImpactResult,
+    PropagationStep as ImpactPropagationStep, RiskAssessment,
 };
 pub use lifecycle::LifecycleState;
 pub use lifecycle_engine::{LifecycleError, ProjectContext, StateTransition};
