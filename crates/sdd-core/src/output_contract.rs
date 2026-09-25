@@ -173,12 +173,10 @@ impl OutputContractValidator {
                     OutputCheck::fail("build_success", "Build failed")
                 }
             }
-            QualityGate::CoverageThreshold(threshold) => {
-                OutputCheck::pass(
-                    "coverage_threshold",
-                    &format!("Coverage threshold {:.1}% met", threshold),
-                )
-            }
+            QualityGate::CoverageThreshold(threshold) => OutputCheck::pass(
+                "coverage_threshold",
+                &format!("Coverage threshold {:.1}% met", threshold),
+            ),
         }
     }
 }

@@ -313,9 +313,7 @@ impl Orchestrator {
             }
         }
 
-        let mut budget = TokenBudget::new(
-            agent.context_limits.max_tokens as usize,
-        );
+        let mut budget = TokenBudget::new(agent.context_limits.max_tokens as usize);
 
         let relation_resolver = ExplicitRelationResolver::new(&self.graph);
         let fragments = relation_resolver.resolve_task_context(task, &mut budget)?;
