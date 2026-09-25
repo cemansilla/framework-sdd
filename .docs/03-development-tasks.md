@@ -206,19 +206,19 @@ Registrar ejecuciones, fallos y reintentos.
 
 ## Fase 7 — Integraciones de modelos
 
-### TASK-FW-090 — Integration profile model
+### TASK-FW-090 — Integration profile model [x]
 Definir perfiles de herramientas/modelos.
 
-### TASK-FW-091 — External agent contract
+### TASK-FW-091 — External agent contract [x]
 Definir cómo un agente externo solicita tareas/contexto.
 
-### TASK-FW-092 — OpenCode profile
+### TASK-FW-092 — OpenCode profile [x]
 Crear perfil inicial para probar el framework con OpenCode/Warp.
 
-### TASK-FW-093 — Profile versioning
+### TASK-FW-093 — Profile versioning [x]
 Versionar capacidades y estructuras específicas por integración.
 
-### TASK-FW-094 — Integration validation
+### TASK-FW-094 — Integration validation [x]
 Detectar incompatibilidades de perfiles.
 
 ## Fase 8 — CLI
