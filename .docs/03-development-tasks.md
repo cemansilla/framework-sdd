@@ -312,23 +312,23 @@ Determinar qué gates deben repetirse.
 
 ## Fase 14 — PoC
 
-### TASK-FW-180 — Initialize Logistics Gateway
-### TASK-FW-181 — PoC brief/discovery
-### TASK-FW-182 — PoC requirements
-### TASK-FW-183 — PoC domain model
-### TASK-FW-184 — PoC architecture
-### TASK-FW-185 — PoC technical design
-### TASK-FW-186 — PoC task generation
-### TASK-FW-187 — Mock carrier interfaces
-### TASK-FW-188 — Quote endpoint
-### TASK-FW-189 — Carrier adapters
-### TASK-FW-190 — Margin engine
-### TASK-FW-191 — Shipping order flow
-### TASK-FW-192 — Persistence
-### TASK-FW-193 — Testing
-### TASK-FW-194 — Review/QA
-### TASK-FW-195 — Change/fix exercise
-### TASK-FW-196 — PoC final audit
+### TASK-FW-180 — Initialize Logistics Gateway [x]
+### TASK-FW-181 — PoC brief/discovery [x]
+### TASK-FW-182 — PoC requirements [x]
+### TASK-FW-183 — PoC domain model [x]
+### TASK-FW-184 — PoC architecture [x]
+### TASK-FW-185 — PoC technical design [x]
+### TASK-FW-186 — PoC task generation [x]
+### TASK-FW-187 — Mock carrier interfaces [x]
+### TASK-FW-188 — Quote endpoint [x]
+### TASK-FW-189 — Carrier adapters [x]
+### TASK-FW-190 — Margin engine [x]
+### TASK-FW-191 — Shipping order flow [x]
+### TASK-FW-192 — Persistence [x]
+### TASK-FW-193 — Testing [x]
+### TASK-FW-194 — Review/QA [x]
+### TASK-FW-195 — Change/fix exercise [x]
+### TASK-FW-196 — PoC final audit [x]
 
 ## Fase 15 — Framework self-hosting
 
