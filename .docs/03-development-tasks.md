@@ -291,12 +291,12 @@ Determinar qué gates deben repetirse.
 
 ## Fase 12 — Observability
 
-### TASK-FW-150 — Execution metrics
-### TASK-FW-151 — Token metrics
-### TASK-FW-152 — Retrieval metrics
-### TASK-FW-153 — Agent metrics
-### TASK-FW-154 — Validation metrics
-### TASK-FW-155 — Audit report
+### TASK-FW-150 — Execution metrics [x]
+### TASK-FW-151 — Token metrics [x]
+### TASK-FW-152 — Retrieval metrics [x]
+### TASK-FW-153 — Agent metrics [x]
+### TASK-FW-154 — Validation metrics [x]
+### TASK-FW-155 — Audit report [x]
 
 ## Fase 13 — Quality
 
