@@ -223,24 +223,24 @@ Detectar incompatibilidades de perfiles.
 
 ## Fase 8 — CLI
 
-### TASK-FW-100 — `sdd init`
-### TASK-FW-101 — `sdd status`
-### TASK-FW-102 — `sdd brainstorm`
-### TASK-FW-103 — `sdd requirements`
-### TASK-FW-104 — `sdd questions`
-### TASK-FW-105 — `sdd architecture`
-### TASK-FW-106 — `sdd design`
-### TASK-FW-107 — `sdd tasks`
-### TASK-FW-108 — `sdd task`
-### TASK-FW-109 — `sdd context`
-### TASK-FW-110 — `sdd implement`
-### TASK-FW-111 — `sdd test`
-### TASK-FW-112 — `sdd review`
-### TASK-FW-113 — `sdd change`
-### TASK-FW-114 — `sdd impact`
-### TASK-FW-115 — `sdd validate`
-### TASK-FW-116 — `sdd changelog`
-### TASK-FW-117 — `sdd hooks`
+### TASK-FW-100 — `sdd init` [x]
+### TASK-FW-101 — `sdd status` [x]
+### TASK-FW-102 — `sdd brainstorm` [x]
+### TASK-FW-103 — `sdd requirements` [x]
+### TASK-FW-104 — `sdd questions` [x]
+### TASK-FW-105 — `sdd architecture` [x]
+### TASK-FW-106 — `sdd design` [x]
+### TASK-FW-107 — `sdd tasks` [x]
+### TASK-FW-108 — `sdd task` [x]
+### TASK-FW-109 — `sdd context` [x]
+### TASK-FW-110 — `sdd implement` [x]
+### TASK-FW-111 — `sdd test` [x]
+### TASK-FW-112 — `sdd review` [x]
+### TASK-FW-113 — `sdd change` [x]
+### TASK-FW-114 — `sdd impact` [x]
+### TASK-FW-115 — `sdd validate` [x]
+### TASK-FW-116 — `sdd changelog` [x]
+### TASK-FW-117 — `sdd hooks` [x]
 
 Cada comando debe tener contrato de entrada/salida, códigos de error y tests CLI.
 
