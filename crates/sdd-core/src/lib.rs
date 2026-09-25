@@ -1,5 +1,6 @@
 pub mod agent;
 pub mod agent_registry;
+pub mod approval_gates;
 pub mod architecture;
 pub mod artifact;
 pub mod change;
@@ -9,9 +10,13 @@ pub mod context_inspector;
 pub mod context_prioritizer;
 pub mod context_resolver;
 pub mod discovery;
+pub mod execution_history;
 pub mod lifecycle;
 pub mod lifecycle_engine;
 pub mod lifecycle_phases;
+pub mod orchestrator;
+pub mod output_contract;
+pub mod permission_engine;
 pub mod planning;
 pub mod project;
 pub mod repository;
@@ -31,6 +36,7 @@ pub use agent::{
     OutputContract, OutputFormat, QualityGate, TaskType,
 };
 pub use agent_registry::AgentRegistry;
+pub use approval_gates::{ApprovalError, ApprovalGate, ApprovalManager, ApprovalStatus};
 pub use architecture::{
     Adr, AdrStatus, Architecture, ArchitectureStyle, Component, Interface, Operation, PortType,
 };
@@ -51,12 +57,21 @@ pub use discovery::{
     Alternative, Answer, Assumption, Decision, DecisionStatus, Question, QuestionStatus, Risk,
     RiskStatus,
 };
+pub use execution_history::{
+    ExecutionHistory, ExecutionMetrics, ExecutionRecord, ExecutionRecordStatus,
+};
 pub use lifecycle::LifecycleState;
 pub use lifecycle_engine::{LifecycleError, ProjectContext, StateTransition};
 pub use lifecycle_phases::{
     BrainstormingSession, BrainstormingStatus, Brief, BriefScope, DiscoveryContext, Idea,
     IdeaCategory, IdeaPriority, Stakeholder,
 };
+pub use orchestrator::{
+    ApprovalRequest, Checkpoint, ExecutionRequest, ExecutionResult, ExecutionStatus, Orchestrator,
+    OrchestratorConfig, OrchestratorError, OrchestratorState, ValidationResult,
+};
+pub use output_contract::{OutputCheck, OutputContractValidator, OutputValidation};
+pub use permission_engine::{PermissionAction, PermissionCheck, PermissionEngine};
 pub use planning::{
     DecompositionStrategy, ImplementationPlan, PlanStatus, PlanningError, TaskDecomposition,
 };

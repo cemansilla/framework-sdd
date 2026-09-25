@@ -145,7 +145,9 @@ impl ScopeResolver {
         if parts.len() == 2 {
             let prefix = parts[0];
             let suffix = parts[1];
-            return text.starts_with(prefix) && text.ends_with(suffix) && text.len() >= prefix.len() + suffix.len();
+            return text.starts_with(prefix)
+                && text.ends_with(suffix)
+                && text.len() >= prefix.len() + suffix.len();
         }
 
         text.contains(pattern)
