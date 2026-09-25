@@ -116,28 +116,28 @@ Descomponer trabajo y calcular dependencias.
 
 ## Fase 4 — Agents y Skills
 
-### TASK-FW-050 — Agent model
+### TASK-FW-050 — Agent model [x]
 Definir metadata y contratos de agentes.
 
-### TASK-FW-051 — Built-in agents
+### TASK-FW-051 — Built-in agents [x]
 Implementar Planner, Implementer, Reviewer y QA.
 
-### TASK-FW-052 — Custom agents
+### TASK-FW-052 — Custom agents [x]
 Permitir agentes propios.
 
-### TASK-FW-053 — Skill model
+### TASK-FW-053 — Skill model [x]
 Definir metadata, versiones, dependencias y applicability.
 
-### TASK-FW-054 — Built-in skills
+### TASK-FW-054 — Built-in skills [x]
 Crear catálogo inicial.
 
-### TASK-FW-055 — Project skills
+### TASK-FW-055 — Project skills [x]
 Permitir skills propios por proyecto.
 
-### TASK-FW-056 — Skill resolution
+### TASK-FW-056 — Skill resolution [x]
 Seleccionar skills aplicables a cada tarea.
 
-### TASK-FW-057 — Agent resolution
+### TASK-FW-057 — Agent resolution [x]
 Seleccionar agente compatible con tarea y skills.
 
 ## Fase 5 — Context Engineering

@@ -1,3 +1,5 @@
+pub mod agent;
+pub mod agent_registry;
 pub mod architecture;
 pub mod artifact;
 pub mod change;
@@ -9,10 +11,18 @@ pub mod planning;
 pub mod project;
 pub mod repository;
 pub mod requirement;
+pub mod resolution;
+pub mod skill;
+pub mod skill_registry;
 pub mod task;
 pub mod traceability;
 pub mod verification;
 
+pub use agent::{
+    Agent, AgentAction, AgentPermissions, AgentStatus, AgentType, Capability, ContextLimits,
+    OutputContract, OutputFormat, QualityGate, TaskType,
+};
+pub use agent_registry::AgentRegistry;
 pub use architecture::{
     Adr, AdrStatus, Architecture, ArchitectureStyle, Component, Interface, Operation, PortType,
 };
@@ -43,6 +53,15 @@ pub use repository::{
 pub use requirement::{
     AcceptanceCriterion, Priority, Requirement, RequirementStatus, RequirementType,
 };
+pub use resolution::{
+    AgentResolver, ResolutionReasoning, ResolutionRequest, ResolutionResult, SkillResolver,
+    TaskResolver,
+};
+pub use skill::{
+    InputType, OutputType, Skill, SkillApplicability, SkillCompatibility, SkillExample, SkillInput,
+    SkillOutput, SkillStatus, SkillType,
+};
+pub use skill_registry::{SkillRegistry, SkillResolutionError};
 pub use task::{Effort, Task, TaskOutputs, TaskScope, TaskStatus};
 pub use traceability::{EdgeType, GraphEdge, GraphNode, NodeType, TraceabilityGraph};
 pub use verification::{
