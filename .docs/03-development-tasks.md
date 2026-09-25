@@ -32,31 +32,31 @@ Implementar pipeline de fmt, clippy, test y build.
 
 ## Fase 1 — Modelo de dominio
 
-### TASK-FW-010 — Modelo Project
+### TASK-FW-010 — Modelo Project [x]
 Representar proyecto, configuración y metadata.
 
-### TASK-FW-011 — Modelo Artifact
+### TASK-FW-011 — Modelo Artifact [x]
 Representar artefactos persistentes, tipo, versión, hash, origen y relaciones.
 
-### TASK-FW-012 — Modelo Requirement
+### TASK-FW-012 — Modelo Requirement [x]
 Representar requisitos, criterios de aceptación y estado.
 
-### TASK-FW-013 — Modelo Question/Decision/Assumption/Risk
+### TASK-FW-013 — Modelo Question/Decision/Assumption/Risk [x]
 Implementar incertidumbre y decisiones.
 
-### TASK-FW-014 — Modelo Architecture/ADR
+### TASK-FW-014 — Modelo Architecture/ADR [x]
 Representar arquitectura y decisiones arquitectónicas.
 
-### TASK-FW-015 — Modelo Task
+### TASK-FW-015 — Modelo Task [x]
 Implementar tareas, dependencias, scope, estado, agente, skills y outputs.
 
-### TASK-FW-016 — Modelo Verification
+### TASK-FW-016 — Modelo Verification [x]
 Representar tests, reviews, resultados y evidencias.
 
-### TASK-FW-017 — Modelo Change
+### TASK-FW-017 — Modelo Change [x]
 Representar cambios, impacto, origen y relaciones.
 
-### TASK-FW-018 — Modelo Traceability Graph
+### TASK-FW-018 — Modelo Traceability Graph [x]
 Implementar relaciones entre artefactos y navegación bidireccional.
 
 ## Fase 2 — Persistencia
