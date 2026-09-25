@@ -1,0 +1,11 @@
+[package]
+name = "sdd-parser"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+sdd-core = { path = "../sdd-core" }
+thiserror.workspace = true
+tracing.workspace = true
