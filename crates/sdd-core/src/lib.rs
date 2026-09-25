@@ -1,8 +1,10 @@
 pub mod agent;
+pub mod agent_metrics;
 pub mod agent_registry;
 pub mod approval_gates;
 pub mod architecture;
 pub mod artifact;
+pub mod audit_report;
 pub mod branch_convention;
 pub mod change;
 pub mod change_detection;
@@ -19,6 +21,7 @@ pub mod context_prioritizer;
 pub mod context_resolver;
 pub mod discovery;
 pub mod execution_history;
+pub mod execution_metrics;
 pub mod impact_analysis;
 pub mod issue_tracker;
 pub mod lifecycle;
@@ -32,6 +35,7 @@ pub mod project;
 pub mod repository;
 pub mod requirement;
 pub mod resolution;
+pub mod retrieval_metrics;
 pub mod scope_resolver;
 pub mod scope_validation;
 pub mod semantic_ranker;
@@ -40,19 +44,27 @@ pub mod skill_registry;
 pub mod task;
 pub mod task_commit_mapping;
 pub mod token_budget;
+pub mod token_metrics;
 pub mod traceability;
+pub mod validation_metrics;
 pub mod verification;
 
 pub use agent::{
     Agent, AgentAction, AgentPermissions, AgentStatus, AgentType, Capability, ContextLimits,
     OutputContract, OutputFormat, QualityGate, TaskType,
 };
+pub use agent_metrics::{AgentError, AgentMetrics, AgentMetricsCollector, AgentMetricsSummary};
 pub use agent_registry::AgentRegistry;
 pub use approval_gates::{ApprovalError, ApprovalGate, ApprovalManager, ApprovalStatus};
 pub use architecture::{
     Adr, AdrStatus, Architecture, ArchitectureStyle, Component, Interface, Operation, PortType,
 };
 pub use artifact::{Artifact, ArtifactCategory, ArtifactOrigin, ArtifactRelation, RelationType};
+pub use audit_report::{
+    AgentSummary, AuditReport, AuditReportGenerator, AuditReportInput, ExecutionSummary,
+    ExecutiveSummary, Recommendation, RecommendationPriority, RetrievalSummary, TokenSummary,
+    ValidationSummary,
+};
 pub use branch_convention::{BranchConvention, BranchError, BranchInfo, BranchPattern, BranchType};
 pub use change::{
     Change, ChangeOrigin, ChangeStatus, ChangeType, ChangelogEntry, ChangelogItem, ImpactAnalysis,
@@ -92,6 +104,9 @@ pub use discovery::{
 pub use execution_history::{
     ExecutionHistory, ExecutionMetrics, ExecutionRecord, ExecutionRecordStatus,
 };
+pub use execution_metrics::{
+    ExecutionMetrics as TaskExecutionMetrics, ExecutionMetricsCollector, ExecutionMetricsStatus,
+};
 pub use impact_analysis::{
     EffortEstimate, ImpactAnalyzer, ImpactLevel, ImpactNode, ImpactResult,
     PropagationStep as ImpactPropagationStep, RiskAssessment,
@@ -128,6 +143,10 @@ pub use resolution::{
     AgentResolver, ResolutionReasoning, ResolutionRequest, ResolutionResult, SkillResolver,
     TaskResolver,
 };
+pub use retrieval_metrics::{
+    FindingSeverity, RetrievalMetrics, RetrievalMetricsCollector, RetrievalMetricsSummary,
+    RetrievalType, ValidationFinding,
+};
 pub use scope_resolver::{ScopeResolver, ScopeResult};
 pub use scope_validation::{
     PreCommitHook, PrePushHook, ScopeValidationHook, ValidationError,
@@ -142,8 +161,17 @@ pub use skill_registry::{SkillRegistry, SkillResolutionError};
 pub use task::{Effort, Task, TaskOutputs, TaskScope, TaskStatus};
 pub use task_commit_mapping::{CommitReference, MappingError, TaskCommitMapper, TaskCommitMapping};
 pub use token_budget::{TokenBudgetCalculator, TokenBudgetConfig};
+pub use token_metrics::{
+    TokenMetrics, TokenMetricsCollector, TokenMetricsSummary, TokenOperation, TokenPricing,
+};
 pub use traceability::{EdgeType, GraphEdge, GraphNode, NodeType, TraceabilityGraph};
+pub use validation_metrics::{
+    FindingSeverity as ValidationFindingSeverity, ValidationFinding as ValidationFindingDetail,
+    ValidationMetrics, ValidationMetricsCollector, ValidationMetricsSummary, ValidationStatus,
+    ValidationType,
+};
 pub use verification::{
-    Finding, FindingCategory, FindingSeverity, Review, ReviewVerdict, TestCase, TestResult,
-    TestStatus, TestSuite, TestType, VerificationReport, VerificationStatus,
+    Finding, FindingCategory, FindingSeverity as VerificationFindingSeverity, Review,
+    ReviewVerdict, TestCase, TestResult, TestStatus, TestSuite, TestType, VerificationReport,
+    VerificationStatus,
 };
