@@ -18,297 +18,297 @@ Implementar el framework completo definido en `technical-specification.md`, util
 
 ## Fase 0 — Gobierno del proyecto
 
-### TASK-FW-001 — Scaffolding del repositorio
+### TASK-FW-001 — Scaffolding del repositorio [x]
 Crear Cargo workspace, crates iniciales, CI y estructura documental.
 
-### TASK-FW-002 — Convenciones de desarrollo
+### TASK-FW-002 — Convenciones de desarrollo [x]
 Definir Rust/MSRV, formato, linting, testing, commits, branches, versionado y reglas de agentes.
 
-### TASK-FW-003 — ADR de arquitectura
+### TASK-FW-003 — ADR de arquitectura [x]
 Formalizar arquitectura hexagonal, límites del core y decisiones iniciales.
 
-### TASK-FW-004 — CI base
+### TASK-FW-004 — CI base [x]
 Implementar pipeline de fmt, clippy, test y build.
 
 ## Fase 1 — Modelo de dominio
 
-### TASK-FW-010 — Modelo Project
+### TASK-FW-010 — Modelo Project [x]
 Representar proyecto, configuración y metadata.
 
-### TASK-FW-011 — Modelo Artifact
+### TASK-FW-011 — Modelo Artifact [x]
 Representar artefactos persistentes, tipo, versión, hash, origen y relaciones.
 
-### TASK-FW-012 — Modelo Requirement
+### TASK-FW-012 — Modelo Requirement [x]
 Representar requisitos, criterios de aceptación y estado.
 
-### TASK-FW-013 — Modelo Question/Decision/Assumption/Risk
+### TASK-FW-013 — Modelo Question/Decision/Assumption/Risk [x]
 Implementar incertidumbre y decisiones.
 
-### TASK-FW-014 — Modelo Architecture/ADR
+### TASK-FW-014 — Modelo Architecture/ADR [x]
 Representar arquitectura y decisiones arquitectónicas.
 
-### TASK-FW-015 — Modelo Task
+### TASK-FW-015 — Modelo Task [x]
 Implementar tareas, dependencias, scope, estado, agente, skills y outputs.
 
-### TASK-FW-016 — Modelo Verification
+### TASK-FW-016 — Modelo Verification [x]
 Representar tests, reviews, resultados y evidencias.
 
-### TASK-FW-017 — Modelo Change
+### TASK-FW-017 — Modelo Change [x]
 Representar cambios, impacto, origen y relaciones.
 
-### TASK-FW-018 — Modelo Traceability Graph
+### TASK-FW-018 — Modelo Traceability Graph [x]
 Implementar relaciones entre artefactos y navegación bidireccional.
 
 ## Fase 2 — Persistencia
 
-### TASK-FW-020 — Estructura `.sdd/`
+### TASK-FW-020 — Estructura `.sdd/` [x]
 Crear estructura inicial y templates.
 
-### TASK-FW-021 — Manifest
+### TASK-FW-021 — Manifest [x]
 Implementar manifest/versionado de metadata.
 
-### TASK-FW-022 — Repository ports
+### TASK-FW-022 — Repository ports [x]
 Definir puertos de persistencia en el core.
 
-### TASK-FW-023 — Filesystem adapter
+### TASK-FW-023 — Filesystem adapter [x]
 Implementar almacenamiento atómico.
 
-### TASK-FW-024 — Locks/concurrency
+### TASK-FW-024 — Locks/concurrency [x]
 Evitar corrupción por operaciones concurrentes.
 
-### TASK-FW-025 — Migration system
+### TASK-FW-025 — Migration system [x]
 Implementar migraciones/versionado de formatos persistentes.
 
 ## Fase 3 — Lifecycle SDD
 
-### TASK-FW-030 — Lifecycle state machine
+### TASK-FW-030 — Lifecycle state machine [x]
 Implementar estados y transiciones.
 
-### TASK-FW-031 — Brainstorming
+### TASK-FW-031 — Brainstorming [x]
 Permitir registrar y estructurar exploración inicial.
 
-### TASK-FW-032 — Brief generation
+### TASK-FW-032 — Brief generation [x]
 Crear y actualizar brief.
 
-### TASK-FW-033 — Discovery
+### TASK-FW-033 — Discovery [x]
 Gestionar preguntas, respuestas, supuestos y riesgos.
 
-### TASK-FW-034 — Requirements
+### TASK-FW-034 — Requirements [x]
 Crear, validar y versionar requisitos.
 
-### TASK-FW-035 — Domain modeling
+### TASK-FW-035 — Domain modeling [x]
 Generar y mantener modelo de dominio.
 
-### TASK-FW-036 — Architecture
+### TASK-FW-036 — Architecture [x]
 Crear y actualizar arquitectura.
 
-### TASK-FW-037 — Technical design
+### TASK-FW-037 — Technical design [x]
 Crear diseño técnico derivado de requisitos y arquitectura.
 
-### TASK-FW-038 — ADR workflow
+### TASK-FW-038 — ADR workflow [x]
 Crear, aprobar, versionar y relacionar ADRs.
 
-### TASK-FW-039 — Planning
+### TASK-FW-039 — Planning [x]
 Crear plan de implementación.
 
-### TASK-FW-040 — Task decomposition
+### TASK-FW-040 — Task decomposition [x]
 Descomponer trabajo y calcular dependencias.
 
 ## Fase 4 — Agents y Skills
 
-### TASK-FW-050 — Agent model
+### TASK-FW-050 — Agent model [x]
 Definir metadata y contratos de agentes.
 
-### TASK-FW-051 — Built-in agents
+### TASK-FW-051 — Built-in agents [x]
 Implementar Planner, Implementer, Reviewer y QA.
 
-### TASK-FW-052 — Custom agents
+### TASK-FW-052 — Custom agents [x]
 Permitir agentes propios.
 
-### TASK-FW-053 — Skill model
+### TASK-FW-053 — Skill model [x]
 Definir metadata, versiones, dependencias y applicability.
 
-### TASK-FW-054 — Built-in skills
+### TASK-FW-054 — Built-in skills [x]
 Crear catálogo inicial.
 
-### TASK-FW-055 — Project skills
+### TASK-FW-055 — Project skills [x]
 Permitir skills propios por proyecto.
 
-### TASK-FW-056 — Skill resolution
+### TASK-FW-056 — Skill resolution [x]
 Seleccionar skills aplicables a cada tarea.
 
-### TASK-FW-057 — Agent resolution
+### TASK-FW-057 — Agent resolution [x]
 Seleccionar agente compatible con tarea y skills.
 
 ## Fase 5 — Context Engineering
 
-### TASK-FW-060 — Context Bundle model
+### TASK-FW-060 — Context Bundle model [x]
 Definir contrato del bundle.
 
-### TASK-FW-061 — Explicit relation resolver
+### TASK-FW-061 — Explicit relation resolver [x]
 Resolver contexto mediante grafo y dependencias.
 
-### TASK-FW-062 — Scope resolver
+### TASK-FW-062 — Scope resolver [x]
 Determinar archivos y artefactos relevantes.
 
-### TASK-FW-063 — AST adapter
+### TASK-FW-063 — AST adapter [x]
 Integrar Tree-sitter.
 
-### TASK-FW-064 — AST signatures
+### TASK-FW-064 — AST signatures [x]
 Extraer interfaces, traits, tipos y firmas.
 
-### TASK-FW-065 — Lexical retrieval
+### TASK-FW-065 — Lexical retrieval [x]
 Implementar recuperación textual.
 
-### TASK-FW-066 — Vector retrieval port
+### TASK-FW-066 — Vector retrieval port [x]
 Definir adapter abstracto.
 
-### TASK-FW-067 — Local vector index
+### TASK-FW-067 — Local vector index [x]
 Implementar una primera implementación local.
 
-### TASK-FW-068 — Semantic ranking
+### TASK-FW-068 — Semantic ranking [x]
 Combinar señales explícitas y semánticas.
 
-### TASK-FW-069 — Token budget
+### TASK-FW-069 — Token budget [x]
 Calcular presupuesto por tarea/agente/modelo.
 
-### TASK-FW-070 — Context prioritization
+### TASK-FW-070 — Context prioritization [x]
 Aplicar P0/P1/P2/P3 y truncamiento.
 
-### TASK-FW-071 — Context inspection
+### TASK-FW-071 — Context inspection [x]
 Mostrar exactamente qué recibiría un agente.
 
-### TASK-FW-072 — Context caching
+### TASK-FW-072 — Context caching [x]
 Cachear bundles y derivados reproducibles.
 
-### TASK-FW-073 — Cache invalidation
+### TASK-FW-073 — Cache invalidation [x]
 Invalidar según hashes, versiones y dependencias.
 
 ## Fase 6 — Orchestration
 
-### TASK-FW-080 — Orchestrator core
+### TASK-FW-080 — Orchestrator core [x]
 Implementar flujo estado → agente → contexto → ejecución → validación.
 
-### TASK-FW-081 — Output contracts
+### TASK-FW-081 — Output contracts [x]
 Definir contratos de salida por agente/tarea.
 
-### TASK-FW-082 — Permission model
+### TASK-FW-082 — Permission model [x]
 Aplicar permisos mínimos.
 
-### TASK-FW-083 — Approval gates
+### TASK-FW-083 — Approval gates [x]
 Implementar gates humanos.
 
-### TASK-FW-084 — Recovery/checkpoints
+### TASK-FW-084 — Recovery/checkpoints [x]
 Permitir reanudar operaciones.
 
-### TASK-FW-085 — Execution history
+### TASK-FW-085 — Execution history [x]
 Registrar ejecuciones, fallos y reintentos.
 
 ## Fase 7 — Integraciones de modelos
 
-### TASK-FW-090 — Integration profile model
+### TASK-FW-090 — Integration profile model [x]
 Definir perfiles de herramientas/modelos.
 
-### TASK-FW-091 — External agent contract
+### TASK-FW-091 — External agent contract [x]
 Definir cómo un agente externo solicita tareas/contexto.
 
-### TASK-FW-092 — OpenCode profile
+### TASK-FW-092 — OpenCode profile [x]
 Crear perfil inicial para probar el framework con OpenCode/Warp.
 
-### TASK-FW-093 — Profile versioning
+### TASK-FW-093 — Profile versioning [x]
 Versionar capacidades y estructuras específicas por integración.
 
-### TASK-FW-094 — Integration validation
+### TASK-FW-094 — Integration validation [x]
 Detectar incompatibilidades de perfiles.
 
 ## Fase 8 — CLI
 
-### TASK-FW-100 — `sdd init`
-### TASK-FW-101 — `sdd status`
-### TASK-FW-102 — `sdd brainstorm`
-### TASK-FW-103 — `sdd requirements`
-### TASK-FW-104 — `sdd questions`
-### TASK-FW-105 — `sdd architecture`
-### TASK-FW-106 — `sdd design`
-### TASK-FW-107 — `sdd tasks`
-### TASK-FW-108 — `sdd task`
-### TASK-FW-109 — `sdd context`
-### TASK-FW-110 — `sdd implement`
-### TASK-FW-111 — `sdd test`
-### TASK-FW-112 — `sdd review`
-### TASK-FW-113 — `sdd change`
-### TASK-FW-114 — `sdd impact`
-### TASK-FW-115 — `sdd validate`
-### TASK-FW-116 — `sdd changelog`
-### TASK-FW-117 — `sdd hooks`
+### TASK-FW-100 — `sdd init` [x]
+### TASK-FW-101 — `sdd status` [x]
+### TASK-FW-102 — `sdd brainstorm` [x]
+### TASK-FW-103 — `sdd requirements` [x]
+### TASK-FW-104 — `sdd questions` [x]
+### TASK-FW-105 — `sdd architecture` [x]
+### TASK-FW-106 — `sdd design` [x]
+### TASK-FW-107 — `sdd tasks` [x]
+### TASK-FW-108 — `sdd task` [x]
+### TASK-FW-109 — `sdd context` [x]
+### TASK-FW-110 — `sdd implement` [x]
+### TASK-FW-111 — `sdd test` [x]
+### TASK-FW-112 — `sdd review` [x]
+### TASK-FW-113 — `sdd change` [x]
+### TASK-FW-114 — `sdd impact` [x]
+### TASK-FW-115 — `sdd validate` [x]
+### TASK-FW-116 — `sdd changelog` [x]
+### TASK-FW-117 — `sdd hooks` [x]
 
 Cada comando debe tener contrato de entrada/salida, códigos de error y tests CLI.
 
 ## Fase 9 — MCP
 
-### TASK-FW-120 — MCP server
+### TASK-FW-120 — MCP server [x]
 Implementar transporte y lifecycle.
 
-### TASK-FW-121 — get_project_status
-### TASK-FW-122 — get_task
-### TASK-FW-123 — get_task_context
-### TASK-FW-124 — get_traceability
-### TASK-FW-125 — submit_task_output
-### TASK-FW-126 — submit_validation
-### TASK-FW-127 — register_change
-### TASK-FW-128 — get_impact
+### TASK-FW-121 — get_project_status [x]
+### TASK-FW-122 — get_task [x]
+### TASK-FW-123 — get_task_context [x]
+### TASK-FW-124 — get_traceability [x]
+### TASK-FW-125 — submit_task_output [x]
+### TASK-FW-126 — submit_validation [x]
+### TASK-FW-127 — register_change [x]
+### TASK-FW-128 — get_impact [x]
 
 ## Fase 10 — Change Management
 
-### TASK-FW-130 — Change detection
+### TASK-FW-130 — Change detection [x]
 Detectar cambios originados en cualquier fase.
 
-### TASK-FW-131 — Impact graph
+### TASK-FW-131 — Impact graph [x]
 Resolver artefactos afectados.
 
-### TASK-FW-132 — Documentation synchronization
+### TASK-FW-132 — Documentation synchronization [x]
 Actualizar documentación afectada.
 
-### TASK-FW-133 — Task synchronization
+### TASK-FW-133 — Task synchronization [x]
 Actualizar tareas afectadas.
 
-### TASK-FW-134 — Test synchronization
+### TASK-FW-134 — Test synchronization [x]
 Actualizar/crear tests afectados.
 
-### TASK-FW-135 — Changelog
+### TASK-FW-135 — Changelog [x]
 Registrar cambios.
 
-### TASK-FW-136 — Revalidation
+### TASK-FW-136 — Revalidation [x]
 Determinar qué gates deben repetirse.
 
 ## Fase 11 — Git y trazabilidad externa
 
-### TASK-FW-140 — Branch conventions
-### TASK-FW-141 — Commit metadata
-### TASK-FW-142 — Task/commit mapping
-### TASK-FW-143 — Optional issue tracker adapter
-### TASK-FW-144 — Scope validation hook
+### TASK-FW-140 — Branch conventions [x]
+### TASK-FW-141 — Commit metadata [x]
+### TASK-FW-142 — Task/commit mapping [x]
+### TASK-FW-143 — Optional issue tracker adapter [x]
+### TASK-FW-144 — Scope validation hook [x]
 
 ## Fase 12 — Observability
 
-### TASK-FW-150 — Execution metrics
-### TASK-FW-151 — Token metrics
-### TASK-FW-152 — Retrieval metrics
-### TASK-FW-153 — Agent metrics
-### TASK-FW-154 — Validation metrics
-### TASK-FW-155 — Audit report
+### TASK-FW-150 — Execution metrics [x]
+### TASK-FW-151 — Token metrics [x]
+### TASK-FW-152 — Retrieval metrics [x]
+### TASK-FW-153 — Agent metrics [x]
+### TASK-FW-154 — Validation metrics [x]
+### TASK-FW-155 — Audit report [x]
 
 ## Fase 13 — Quality
 
-### TASK-FW-160 — Unit test suite
-### TASK-FW-161 — Integration test suite
-### TASK-FW-162 — Contract tests
-### TASK-FW-163 — CLI tests
-### TASK-FW-164 — MCP tests
-### TASK-FW-165 — E2E lifecycle test
-### TASK-FW-166 — Failure/recovery tests
-### TASK-FW-167 — Change propagation tests
-### TASK-FW-168 — Context budget tests
+### TASK-FW-160 — Unit test suite [x]
+### TASK-FW-161 — Integration test suite [x]
+### TASK-FW-162 — Contract tests [x]
+### TASK-FW-163 — CLI tests [x]
+### TASK-FW-164 — MCP tests [x]
+### TASK-FW-165 — E2E lifecycle test [x]
+### TASK-FW-166 — Failure/recovery tests [x]
+### TASK-FW-167 — Change propagation tests [x]
+### TASK-FW-168 — Context budget tests [x]
 
 ## Fase 14 — PoC
 

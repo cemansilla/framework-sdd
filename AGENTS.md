@@ -64,6 +64,29 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 - **Main ← Develop**: Squash merge (un commit por release).
 - Nunca merge con merge commit.
 
+### Flujo de Integración (OBLIGATORIO)
+
+**El agente NUNCA debe mergear directamente a `develop` o `main`.** Todo cambio debe pasar por Pull Request.
+
+```
+1. Crear branch desde develop
+2. Implementar y commitear en la branch
+3. Ejecutar quality gates (fmt, clippy, test)
+4. Push de la branch a remote
+5. Crear Pull Request hacia develop
+6. Esperar revisión y aprobación del usuario
+7. El usuario mergea el PR (el agente NO mergea)
+```
+
+**Reglas inquebrantables:**
+- El agente SOLO trabaja en su rama de trabajo (la que creó para la tarea).
+- El agente NUNCA trabaja directamente en `develop`, `main` ni ninguna rama ajena a su rama de trabajo.
+- El agente SÍ debe hacer `git push` de su rama de trabajo a remote.
+- El agente NO ejecuta `git merge`, `git rebase` ni `git cherry-pick` sobre `develop` o `main`.
+- El agente NO elimina branches remotas.
+- El agente termina su trabajo en el paso 5 (push + PR creado).
+- La revisión, aprobación y merge son responsabilidad exclusiva del usuario.
+
 ---
 
 ## Conventional Commits

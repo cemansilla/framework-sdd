@@ -22,6 +22,14 @@ Iniciando fase de implementación...
 9. Si `@reviewer` dictamina `APROBADO`:
    - Crear commit convencional: `<tipo>(<scope>): [TASK-ID] <descripcion>`.
    - Marcar la tarea como completada (`[x]`) en `tasks.md`.
-   - Merge a `develop` con squash.
-   - Eliminar branch local.
-10. Reportar al usuario el resultado de la implementación.
+   - Push de la branch a remote.
+   - Crear Pull Request hacia `develop`.
+10. Reportar al usuario el resultado y el link del PR creado.
+
+**Reglas inquebrantables:**
+- El agente SOLO trabaja en su rama de trabajo (la que creó para la tarea).
+- El agente NUNCA trabaja directamente en `develop`, `main` ni ninguna rama ajena a su rama de trabajo.
+- El agente SÍ debe hacer `git push` de su rama de trabajo a remote.
+- El agente NO ejecuta `git merge`, `git rebase` ni `git cherry-pick` sobre `develop` o `main`.
+- El agente NO elimina branches remotas.
+- El merge lo realiza el usuario tras revisar el PR.
