@@ -1,0 +1,54 @@
+[package]
+name = "sdd-tests"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+sdd-core = { path = "../crates/sdd-core" }
+sdd-storage = { path = "../crates/sdd-storage" }
+sdd-parser = { path = "../crates/sdd-parser" }
+sdd-mcp = { path = "../crates/sdd-mcp" }
+sdd-index = { path = "../crates/sdd-index" }
+sdd-integrations = { path = "../crates/sdd-integrations" }
+tokio = { workspace = true }
+serde_json = { workspace = true }
+tempfile = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+[[test]]
+name = "unit_tests"
+path = "unit/core_tests.rs"
+
+[[test]]
+name = "integration_tests"
+path = "integration/storage_tests.rs"
+
+[[test]]
+name = "contract_tests"
+path = "contract/model_contracts.rs"
+
+[[test]]
+name = "cli_tests"
+path = "cli/command_tests.rs"
+
+[[test]]
+name = "mcp_tests"
+path = "mcp/operation_tests.rs"
+
+[[test]]
+name = "e2e_tests"
+path = "e2e/lifecycle_tests.rs"
+
+[[test]]
+name = "failure_tests"
+path = "failure/recovery_tests.rs"
+
+[[test]]
+name = "change_propagation_tests"
+path = "change_propagation/propagation_tests.rs"
+
+[[test]]
+name = "context_budget_tests"
+path = "context_budget/budget_tests.rs"

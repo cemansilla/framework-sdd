@@ -300,15 +300,15 @@ Determinar qué gates deben repetirse.
 
 ## Fase 13 — Quality
 
-### TASK-FW-160 — Unit test suite
-### TASK-FW-161 — Integration test suite
-### TASK-FW-162 — Contract tests
-### TASK-FW-163 — CLI tests
-### TASK-FW-164 — MCP tests
-### TASK-FW-165 — E2E lifecycle test
-### TASK-FW-166 — Failure/recovery tests
-### TASK-FW-167 — Change propagation tests
-### TASK-FW-168 — Context budget tests
+### TASK-FW-160 — Unit test suite [x]
+### TASK-FW-161 — Integration test suite [x]
+### TASK-FW-162 — Contract tests [x]
+### TASK-FW-163 — CLI tests [x]
+### TASK-FW-164 — MCP tests [x]
+### TASK-FW-165 — E2E lifecycle test [x]
+### TASK-FW-166 — Failure/recovery tests [x]
+### TASK-FW-167 — Change propagation tests [x]
+### TASK-FW-168 — Context budget tests [x]
 
 ## Fase 14 — PoC
 

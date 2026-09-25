@@ -9,6 +9,7 @@ members = [
     "crates/sdd-index",
     "crates/sdd-integrations",
     "poc/logistics-gateway",
+    "tests",
 ]
 
 [workspace.package]
