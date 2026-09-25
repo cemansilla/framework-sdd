@@ -4,6 +4,7 @@ pub mod change;
 pub mod discovery;
 pub mod lifecycle;
 pub mod project;
+pub mod repository;
 pub mod requirement;
 pub mod task;
 pub mod traceability;
@@ -23,6 +24,11 @@ pub use discovery::{
 };
 pub use lifecycle::LifecycleState;
 pub use project::{Project, ProjectConfig};
+pub use repository::{
+    ArchitectureRepository, ArtifactRepository, ChangeRepository, ProjectRepository,
+    RepositoryError, RequirementRepository, TaskRepository, TraceabilityRepository,
+    VerificationRepository,
+};
 pub use requirement::{
     AcceptanceCriterion, Priority, Requirement, RequirementStatus, RequirementType,
 };
