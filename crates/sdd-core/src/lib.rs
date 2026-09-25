@@ -3,6 +3,9 @@ pub mod artifact;
 pub mod change;
 pub mod discovery;
 pub mod lifecycle;
+pub mod lifecycle_engine;
+pub mod lifecycle_phases;
+pub mod planning;
 pub mod project;
 pub mod repository;
 pub mod requirement;
@@ -23,6 +26,14 @@ pub use discovery::{
     RiskStatus,
 };
 pub use lifecycle::LifecycleState;
+pub use lifecycle_engine::{LifecycleError, ProjectContext, StateTransition};
+pub use lifecycle_phases::{
+    BrainstormingSession, BrainstormingStatus, Brief, BriefScope, DiscoveryContext, Idea,
+    IdeaCategory, IdeaPriority, Stakeholder,
+};
+pub use planning::{
+    DecompositionStrategy, ImplementationPlan, PlanStatus, PlanningError, TaskDecomposition,
+};
 pub use project::{Project, ProjectConfig};
 pub use repository::{
     ArchitectureRepository, ArtifactRepository, ChangeRepository, ProjectRepository,
