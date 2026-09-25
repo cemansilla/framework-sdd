@@ -41,11 +41,7 @@ impl ScopeValidationHook {
                 ".git/".to_string(),
                 "node_modules/".to_string(),
             ],
-            allowed_extensions: vec![
-                ".rs".to_string(),
-                ".toml".to_string(),
-                ".md".to_string(),
-            ],
+            allowed_extensions: vec![".rs".to_string(), ".toml".to_string(), ".md".to_string()],
             max_file_size: Some(1_000_000),
             require_test_files: true,
         }
@@ -91,9 +87,9 @@ impl ScopeValidationHook {
         }
 
         if self.require_test_files {
-            let has_test_files = files.iter().any(|f| {
-                f.contains("test") || f.contains("spec") || f.ends_with("_test.rs")
-            });
+            let has_test_files = files
+                .iter()
+                .any(|f| f.contains("test") || f.contains("spec") || f.ends_with("_test.rs"));
 
             if !has_test_files && !files.is_empty() {
                 warnings.push(ValidationWarning {
@@ -151,14 +147,18 @@ impl ScopeValidationHook {
     }
 
     fn is_denied_path(&self, file: &str) -> bool {
-        self.denied_paths.iter().any(|denied| file.starts_with(denied))
+        self.denied_paths
+            .iter()
+            .any(|denied| file.starts_with(denied))
     }
 
     fn is_allowed_path(&self, file: &str) -> bool {
         if self.allowed_paths.is_empty() {
             return true;
         }
-        self.allowed_paths.iter().any(|allowed| file.starts_with(allowed))
+        self.allowed_paths
+            .iter()
+            .any(|allowed| file.starts_with(allowed))
     }
 
     fn has_allowed_extension(&self, file: &str) -> bool {
@@ -283,9 +283,8 @@ mod tests {
 
     #[test]
     fn test_custom_allowed_paths() {
-        let hook = ScopeValidationHook::new()
-            .with_allowed_paths(vec!["custom/".to_string()]);
-        
+        let hook = ScopeValidationHook::new().with_allowed_paths(vec!["custom/".to_string()]);
+
         let files = vec!["custom/file.rs".to_string()];
         let result = hook.validate_files(&files);
         assert!(result.is_valid);
@@ -293,9 +292,8 @@ mod tests {
 
     #[test]
     fn test_custom_denied_paths() {
-        let hook = ScopeValidationHook::new()
-            .with_denied_paths(vec!["secret/".to_string()]);
-        
+        let hook = ScopeValidationHook::new().with_denied_paths(vec!["secret/".to_string()]);
+
         let files = vec!["secret/config.rs".to_string()];
         let result = hook.validate_files(&files);
         assert!(!result.is_valid);
@@ -305,7 +303,7 @@ mod tests {
     fn test_custom_extensions() {
         let hook = ScopeValidationHook::new()
             .with_allowed_extensions(vec![".py".to_string(), ".js".to_string()]);
-        
+
         let files = vec!["crates/test.py".to_string()];
         let result = hook.validate_files(&files);
         assert!(result.is_valid);
@@ -315,7 +313,7 @@ mod tests {
     fn test_pre_commit_hook() {
         let validator = ScopeValidationHook::new();
         let hook = PreCommitHook::new(validator);
-        
+
         let files = vec!["crates/sdd-core/src/lib.rs".to_string()];
         let result = hook.run(&files);
         assert!(result.is_valid);
@@ -325,7 +323,7 @@ mod tests {
     fn test_pre_push_hook() {
         let validator = ScopeValidationHook::new();
         let hook = PrePushHook::new(validator);
-        
+
         let files = vec!["crates/sdd-core/src/lib.rs".to_string()];
         let result = hook.run(&files);
         assert!(result.is_valid);

@@ -41,10 +41,7 @@ pub enum CommitType {
 }
 
 impl CommitMessage {
-    pub fn new(
-        commit_type: CommitType,
-        description: impl Into<String>,
-    ) -> Self {
+    pub fn new(commit_type: CommitType, description: impl Into<String>) -> Self {
         Self {
             commit_type,
             scope: None,
@@ -145,7 +142,9 @@ impl CommitMessage {
         };
 
         let (task_id, description) = if description_part.starts_with('[') {
-            let bracket_end = description_part.find(']').ok_or(CommitError::InvalidFormat)?;
+            let bracket_end = description_part
+                .find(']')
+                .ok_or(CommitError::InvalidFormat)?;
             let task_id = &description_part[1..bracket_end];
             let desc = description_part[bracket_end + 1..].trim();
             (Some(task_id.to_string()), desc.to_string())
@@ -299,15 +298,14 @@ mod tests {
 
     #[test]
     fn test_commit_message_with_scope() {
-        let message = CommitMessage::new(CommitType::Fix, "fix bug")
-            .with_scope("core");
+        let message = CommitMessage::new(CommitType::Fix, "fix bug").with_scope("core");
         assert_eq!(message.scope, Some("core".to_string()));
     }
 
     #[test]
     fn test_commit_message_with_task_id() {
-        let message = CommitMessage::new(CommitType::Feat, "add feature")
-            .with_task_id("TASK-FW-001");
+        let message =
+            CommitMessage::new(CommitType::Feat, "add feature").with_task_id("TASK-FW-001");
         assert_eq!(message.task_id, Some("TASK-FW-001".to_string()));
     }
 
@@ -316,7 +314,7 @@ mod tests {
         let message = CommitMessage::new(CommitType::Feat, "add feature")
             .with_scope("core")
             .with_task_id("TASK-FW-001");
-        
+
         let formatted = message.format();
         assert_eq!(formatted, "feat(core): [TASK-FW-001] add feature");
     }
@@ -325,7 +323,7 @@ mod tests {
     fn test_commit_message_parse() {
         let message_str = "feat(core): [TASK-FW-001] add new feature";
         let message = CommitMessage::parse(message_str).unwrap();
-        
+
         assert_eq!(message.commit_type, CommitType::Feat);
         assert_eq!(message.scope, Some("core".to_string()));
         assert_eq!(message.task_id, Some("TASK-FW-001".to_string()));
@@ -336,7 +334,7 @@ mod tests {
     fn test_commit_message_parse_without_scope() {
         let message_str = "fix: [TASK-FW-002] fix bug";
         let message = CommitMessage::parse(message_str).unwrap();
-        
+
         assert_eq!(message.commit_type, CommitType::Fix);
         assert_eq!(message.scope, None);
         assert_eq!(message.task_id, Some("TASK-FW-002".to_string()));
@@ -351,7 +349,7 @@ mod tests {
             "John Doe",
             "feature/TASK-FW-001_add-feature",
         );
-        
+
         assert_eq!(metadata.hash, "abc123");
         assert_eq!(metadata.author, "John Doe");
     }
@@ -366,7 +364,7 @@ mod tests {
             "feature/TASK-FW-001_add-feature",
         )
         .with_task_id("TASK-FW-001");
-        
+
         assert_eq!(metadata.task_ids.len(), 1);
         assert_eq!(metadata.task_ids[0], "TASK-FW-001");
     }
@@ -374,9 +372,9 @@ mod tests {
     #[test]
     fn test_commit_metadata_extractor_task_ids() {
         let extractor = CommitMetadataExtractor::new();
-        let message = CommitMessage::new(CommitType::Feat, "add feature")
-            .with_task_id("TASK-FW-001");
-        
+        let message =
+            CommitMessage::new(CommitType::Feat, "add feature").with_task_id("TASK-FW-001");
+
         let task_ids = extractor.extract_task_ids(&message);
         assert_eq!(task_ids.len(), 1);
         assert_eq!(task_ids[0], "TASK-FW-001");
@@ -390,7 +388,7 @@ mod tests {
             "crates/sdd-storage/src/lib.rs".to_string(),
             "crates/sdd-core/src/project.rs".to_string(),
         ];
-        
+
         let modules = extractor.extract_affected_modules(&files);
         assert_eq!(modules.len(), 2);
         assert!(modules.contains(&"sdd-core".to_string()));

@@ -53,9 +53,7 @@ pub use architecture::{
     Adr, AdrStatus, Architecture, ArchitectureStyle, Component, Interface, Operation, PortType,
 };
 pub use artifact::{Artifact, ArtifactCategory, ArtifactOrigin, ArtifactRelation, RelationType};
-pub use branch_convention::{
-    BranchConvention, BranchError, BranchInfo, BranchPattern, BranchType,
-};
+pub use branch_convention::{BranchConvention, BranchError, BranchInfo, BranchPattern, BranchType};
 pub use change::{
     Change, ChangeOrigin, ChangeStatus, ChangeType, ChangelogEntry, ChangelogItem, ImpactAnalysis,
     RiskLevel,
@@ -132,8 +130,8 @@ pub use resolution::{
 };
 pub use scope_resolver::{ScopeResolver, ScopeResult};
 pub use scope_validation::{
-    PreCommitHook, PrePushHook, ScopeValidationHook, ValidationError, ValidationWarning,
-    ValidationResult as ScopeValidationResult,
+    PreCommitHook, PrePushHook, ScopeValidationHook, ValidationError,
+    ValidationResult as ScopeValidationResult, ValidationWarning,
 };
 pub use semantic_ranker::{RankedFragment, SemanticRanker};
 pub use skill::{

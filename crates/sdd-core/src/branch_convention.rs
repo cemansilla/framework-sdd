@@ -95,7 +95,7 @@ impl BranchConvention {
         for pattern in &self.patterns {
             if self.matches_pattern(name, &pattern.pattern) {
                 let task_id = self.extract_task_id(name);
-                
+
                 if self.require_task_id
                     && task_id.is_none()
                     && pattern.branch_type != BranchType::Chore
@@ -164,7 +164,7 @@ impl BranchConvention {
         description: &str,
     ) -> String {
         let desc = description.to_lowercase().replace(' ', "-");
-        
+
         match branch_type {
             BranchType::Feature => {
                 if let Some(id) = task_id {
@@ -278,11 +278,7 @@ mod tests {
     #[test]
     fn test_generate_chore_branch_name() {
         let convention = BranchConvention::new();
-        let name = convention.generate_branch_name(
-            BranchType::Chore,
-            None,
-            "update dependencies",
-        );
+        let name = convention.generate_branch_name(BranchType::Chore, None, "update dependencies");
         assert_eq!(name, "chore/update-dependencies");
     }
 

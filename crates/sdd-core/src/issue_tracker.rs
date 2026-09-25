@@ -39,10 +39,25 @@ pub enum IssuePriority {
 #[async_trait]
 pub trait IssueTrackerAdapter: Send + Sync {
     async fn get_issue(&self, issue_id: &str) -> Result<Issue, IssueTrackerError>;
-    async fn list_issues(&self, status: Option<IssueStatus>) -> Result<Vec<Issue>, IssueTrackerError>;
-    async fn create_issue(&self, title: &str, description: &str) -> Result<Issue, IssueTrackerError>;
-    async fn update_issue(&self, issue_id: &str, updates: IssueUpdate) -> Result<Issue, IssueTrackerError>;
-    async fn close_issue(&self, issue_id: &str, reason: Option<&str>) -> Result<(), IssueTrackerError>;
+    async fn list_issues(
+        &self,
+        status: Option<IssueStatus>,
+    ) -> Result<Vec<Issue>, IssueTrackerError>;
+    async fn create_issue(
+        &self,
+        title: &str,
+        description: &str,
+    ) -> Result<Issue, IssueTrackerError>;
+    async fn update_issue(
+        &self,
+        issue_id: &str,
+        updates: IssueUpdate,
+    ) -> Result<Issue, IssueTrackerError>;
+    async fn close_issue(
+        &self,
+        issue_id: &str,
+        reason: Option<&str>,
+    ) -> Result<(), IssueTrackerError>;
     async fn add_comment(&self, issue_id: &str, comment: &str) -> Result<(), IssueTrackerError>;
 }
 
@@ -109,25 +124,40 @@ impl IssueTrackerAdapter for GitHubAdapter {
         ))
     }
 
-    async fn list_issues(&self, _status: Option<IssueStatus>) -> Result<Vec<Issue>, IssueTrackerError> {
+    async fn list_issues(
+        &self,
+        _status: Option<IssueStatus>,
+    ) -> Result<Vec<Issue>, IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "GitHub adapter not fully implemented".to_string(),
         ))
     }
 
-    async fn create_issue(&self, _title: &str, _description: &str) -> Result<Issue, IssueTrackerError> {
+    async fn create_issue(
+        &self,
+        _title: &str,
+        _description: &str,
+    ) -> Result<Issue, IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "GitHub adapter not fully implemented".to_string(),
         ))
     }
 
-    async fn update_issue(&self, _issue_id: &str, _updates: IssueUpdate) -> Result<Issue, IssueTrackerError> {
+    async fn update_issue(
+        &self,
+        _issue_id: &str,
+        _updates: IssueUpdate,
+    ) -> Result<Issue, IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "GitHub adapter not fully implemented".to_string(),
         ))
     }
 
-    async fn close_issue(&self, _issue_id: &str, _reason: Option<&str>) -> Result<(), IssueTrackerError> {
+    async fn close_issue(
+        &self,
+        _issue_id: &str,
+        _reason: Option<&str>,
+    ) -> Result<(), IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "GitHub adapter not fully implemented".to_string(),
         ))
@@ -175,25 +205,40 @@ impl IssueTrackerAdapter for JiraAdapter {
         ))
     }
 
-    async fn list_issues(&self, _status: Option<IssueStatus>) -> Result<Vec<Issue>, IssueTrackerError> {
+    async fn list_issues(
+        &self,
+        _status: Option<IssueStatus>,
+    ) -> Result<Vec<Issue>, IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "Jira adapter not fully implemented".to_string(),
         ))
     }
 
-    async fn create_issue(&self, _title: &str, _description: &str) -> Result<Issue, IssueTrackerError> {
+    async fn create_issue(
+        &self,
+        _title: &str,
+        _description: &str,
+    ) -> Result<Issue, IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "Jira adapter not fully implemented".to_string(),
         ))
     }
 
-    async fn update_issue(&self, _issue_id: &str, _updates: IssueUpdate) -> Result<Issue, IssueTrackerError> {
+    async fn update_issue(
+        &self,
+        _issue_id: &str,
+        _updates: IssueUpdate,
+    ) -> Result<Issue, IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "Jira adapter not fully implemented".to_string(),
         ))
     }
 
-    async fn close_issue(&self, _issue_id: &str, _reason: Option<&str>) -> Result<(), IssueTrackerError> {
+    async fn close_issue(
+        &self,
+        _issue_id: &str,
+        _reason: Option<&str>,
+    ) -> Result<(), IssueTrackerError> {
         Err(IssueTrackerError::ConnectionError(
             "Jira adapter not fully implemented".to_string(),
         ))
@@ -237,22 +282,24 @@ impl IssueTrackerAdapter for MockIssueTracker {
             .ok_or_else(|| IssueTrackerError::NotFound(issue_id.to_string()))
     }
 
-    async fn list_issues(&self, status: Option<IssueStatus>) -> Result<Vec<Issue>, IssueTrackerError> {
+    async fn list_issues(
+        &self,
+        status: Option<IssueStatus>,
+    ) -> Result<Vec<Issue>, IssueTrackerError> {
         let issues: Vec<Issue> = self
             .issues
             .values()
-            .filter(|issue| {
-                status
-                    .as_ref()
-                    .map(|s| &issue.status == s)
-                    .unwrap_or(true)
-            })
+            .filter(|issue| status.as_ref().map(|s| &issue.status == s).unwrap_or(true))
             .cloned()
             .collect();
         Ok(issues)
     }
 
-    async fn create_issue(&self, title: &str, description: &str) -> Result<Issue, IssueTrackerError> {
+    async fn create_issue(
+        &self,
+        title: &str,
+        description: &str,
+    ) -> Result<Issue, IssueTrackerError> {
         let issue = Issue {
             id: format!("MOCK-{}", self.issues.len() + 1),
             title: title.to_string(),
@@ -261,7 +308,10 @@ impl IssueTrackerAdapter for MockIssueTracker {
             priority: IssuePriority::Medium,
             assignee: None,
             labels: Vec::new(),
-            url: format!("https://mock-tracker.example.com/issues/{}", self.issues.len() + 1),
+            url: format!(
+                "https://mock-tracker.example.com/issues/{}",
+                self.issues.len() + 1
+            ),
             created_at: Utc::now(),
             updated_at: Utc::now(),
             metadata: HashMap::new(),
@@ -269,7 +319,11 @@ impl IssueTrackerAdapter for MockIssueTracker {
         Ok(issue)
     }
 
-    async fn update_issue(&self, issue_id: &str, updates: IssueUpdate) -> Result<Issue, IssueTrackerError> {
+    async fn update_issue(
+        &self,
+        issue_id: &str,
+        updates: IssueUpdate,
+    ) -> Result<Issue, IssueTrackerError> {
         let mut issue = self
             .issues
             .get(issue_id)
@@ -299,7 +353,11 @@ impl IssueTrackerAdapter for MockIssueTracker {
         Ok(issue)
     }
 
-    async fn close_issue(&self, issue_id: &str, _reason: Option<&str>) -> Result<(), IssueTrackerError> {
+    async fn close_issue(
+        &self,
+        issue_id: &str,
+        _reason: Option<&str>,
+    ) -> Result<(), IssueTrackerError> {
         if !self.issues.contains_key(issue_id) {
             return Err(IssueTrackerError::NotFound(issue_id.to_string()));
         }
@@ -379,7 +437,7 @@ mod tests {
     #[tokio::test]
     async fn test_mock_tracker_list_by_status() {
         let mut tracker = MockIssueTracker::new();
-        
+
         let issue1 = Issue {
             id: "TEST-001".to_string(),
             title: "Open Issue".to_string(),
@@ -425,12 +483,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_jira_adapter_creation() {
-        let adapter = JiraAdapter::new(
-            "https://jira.example.com",
-            "user",
-            "token",
-            "PROJ",
-        );
+        let adapter = JiraAdapter::new("https://jira.example.com", "user", "token", "PROJ");
         assert_eq!(adapter.project_key, "PROJ");
     }
 }

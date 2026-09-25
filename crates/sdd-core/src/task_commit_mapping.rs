@@ -73,12 +73,7 @@ impl TaskCommitMapper {
     pub fn get_tasks_for_commit(&self, commit_hash: &str) -> Vec<&str> {
         self.mappings
             .iter()
-            .filter(|(_, mapping)| {
-                mapping
-                    .commits
-                    .iter()
-                    .any(|c| c.hash == commit_hash)
-            })
+            .filter(|(_, mapping)| mapping.commits.iter().any(|c| c.hash == commit_hash))
             .map(|(task_id, _)| task_id.as_str())
             .collect()
     }
@@ -193,12 +188,8 @@ mod tests {
             "feature/TASK-FW-001",
             "John Doe",
         );
-        let commit2 = CommitReference::new(
-            "def456",
-            "fix: fix bug",
-            "feature/TASK-FW-001",
-            "John Doe",
-        );
+        let commit2 =
+            CommitReference::new("def456", "fix: fix bug", "feature/TASK-FW-001", "John Doe");
 
         mapper.add_commit("TASK-FW-001", commit1).unwrap();
         mapper.add_commit("TASK-FW-001", commit2).unwrap();
@@ -251,12 +242,8 @@ mod tests {
             "feature/TASK-FW-001",
             "John Doe",
         );
-        let commit2 = CommitReference::new(
-            "def456",
-            "fix: fix bug",
-            "feature/TASK-FW-002",
-            "Jane Doe",
-        );
+        let commit2 =
+            CommitReference::new("def456", "fix: fix bug", "feature/TASK-FW-002", "Jane Doe");
 
         mapper.add_commit("TASK-FW-001", commit1).unwrap();
         mapper.add_commit("TASK-FW-002", commit2).unwrap();
