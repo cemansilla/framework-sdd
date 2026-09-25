@@ -47,10 +47,7 @@ impl ProfileVersionManager {
 
     pub fn register_version(&mut self, version: ProfileVersion) {
         let profile_id = version.profile_id.clone();
-        self.versions
-            .entry(profile_id)
-            .or_default()
-            .push(version);
+        self.versions.entry(profile_id).or_default().push(version);
     }
 
     pub fn get_version(&self, profile_id: &str, version: &str) -> Option<&ProfileVersion> {
