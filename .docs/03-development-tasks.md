@@ -283,11 +283,11 @@ Determinar qué gates deben repetirse.
 
 ## Fase 11 — Git y trazabilidad externa
 
-### TASK-FW-140 — Branch conventions
-### TASK-FW-141 — Commit metadata
-### TASK-FW-142 — Task/commit mapping
-### TASK-FW-143 — Optional issue tracker adapter
-### TASK-FW-144 — Scope validation hook
+### TASK-FW-140 — Branch conventions [x]
+### TASK-FW-141 — Commit metadata [x]
+### TASK-FW-142 — Task/commit mapping [x]
+### TASK-FW-143 — Optional issue tracker adapter [x]
+### TASK-FW-144 — Scope validation hook [x]
 
 ## Fase 12 — Observability
 
