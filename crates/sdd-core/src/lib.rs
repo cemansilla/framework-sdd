@@ -3,12 +3,14 @@ pub mod agent_registry;
 pub mod approval_gates;
 pub mod architecture;
 pub mod artifact;
+pub mod branch_convention;
 pub mod change;
 pub mod change_detection;
 pub mod change_history;
 pub mod change_propagation;
 pub mod change_rollback;
 pub mod change_validation;
+pub mod commit_metadata;
 pub mod conflict_resolution;
 pub mod context_bundle;
 pub mod context_cache;
@@ -18,6 +20,7 @@ pub mod context_resolver;
 pub mod discovery;
 pub mod execution_history;
 pub mod impact_analysis;
+pub mod issue_tracker;
 pub mod lifecycle;
 pub mod lifecycle_engine;
 pub mod lifecycle_phases;
@@ -30,10 +33,12 @@ pub mod repository;
 pub mod requirement;
 pub mod resolution;
 pub mod scope_resolver;
+pub mod scope_validation;
 pub mod semantic_ranker;
 pub mod skill;
 pub mod skill_registry;
 pub mod task;
+pub mod task_commit_mapping;
 pub mod token_budget;
 pub mod traceability;
 pub mod verification;
@@ -48,6 +53,7 @@ pub use architecture::{
     Adr, AdrStatus, Architecture, ArchitectureStyle, Component, Interface, Operation, PortType,
 };
 pub use artifact::{Artifact, ArtifactCategory, ArtifactOrigin, ArtifactRelation, RelationType};
+pub use branch_convention::{BranchConvention, BranchError, BranchInfo, BranchPattern, BranchType};
 pub use change::{
     Change, ChangeOrigin, ChangeStatus, ChangeType, ChangelogEntry, ChangelogItem, ImpactAnalysis,
     RiskLevel,
@@ -64,6 +70,9 @@ pub use change_rollback::{
 };
 pub use change_validation::{
     ChangeValidator, ValidationCheck, ValidationResult as ChangeValidationResult,
+};
+pub use commit_metadata::{
+    CommitError, CommitMessage, CommitMetadata, CommitMetadataExtractor, CommitType,
 };
 pub use conflict_resolution::{
     Conflict, ConflictResolution, ConflictResolver, ConflictType, ResolutionStrategy,
@@ -86,6 +95,10 @@ pub use execution_history::{
 pub use impact_analysis::{
     EffortEstimate, ImpactAnalyzer, ImpactLevel, ImpactNode, ImpactResult,
     PropagationStep as ImpactPropagationStep, RiskAssessment,
+};
+pub use issue_tracker::{
+    GitHubAdapter, Issue, IssuePriority, IssueStatus, IssueTrackerAdapter, IssueTrackerError,
+    IssueUpdate, JiraAdapter, MockIssueTracker,
 };
 pub use lifecycle::LifecycleState;
 pub use lifecycle_engine::{LifecycleError, ProjectContext, StateTransition};
@@ -116,6 +129,10 @@ pub use resolution::{
     TaskResolver,
 };
 pub use scope_resolver::{ScopeResolver, ScopeResult};
+pub use scope_validation::{
+    PreCommitHook, PrePushHook, ScopeValidationHook, ValidationError,
+    ValidationResult as ScopeValidationResult, ValidationWarning,
+};
 pub use semantic_ranker::{RankedFragment, SemanticRanker};
 pub use skill::{
     InputType, OutputType, Skill, SkillApplicability, SkillCompatibility, SkillExample, SkillInput,
@@ -123,6 +140,7 @@ pub use skill::{
 };
 pub use skill_registry::{SkillRegistry, SkillResolutionError};
 pub use task::{Effort, Task, TaskOutputs, TaskScope, TaskStatus};
+pub use task_commit_mapping::{CommitReference, MappingError, TaskCommitMapper, TaskCommitMapping};
 pub use token_budget::{TokenBudgetCalculator, TokenBudgetConfig};
 pub use traceability::{EdgeType, GraphEdge, GraphNode, NodeType, TraceabilityGraph};
 pub use verification::{
