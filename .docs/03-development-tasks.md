@@ -186,22 +186,22 @@ Invalidar según hashes, versiones y dependencias.
 
 ## Fase 6 — Orchestration
 
-### TASK-FW-080 — Orchestrator core
+### TASK-FW-080 — Orchestrator core [x]
 Implementar flujo estado → agente → contexto → ejecución → validación.
 
-### TASK-FW-081 — Output contracts
+### TASK-FW-081 — Output contracts [x]
 Definir contratos de salida por agente/tarea.
 
-### TASK-FW-082 — Permission model
+### TASK-FW-082 — Permission model [x]
 Aplicar permisos mínimos.
 
-### TASK-FW-083 — Approval gates
+### TASK-FW-083 — Approval gates [x]
 Implementar gates humanos.
 
-### TASK-FW-084 — Recovery/checkpoints
+### TASK-FW-084 — Recovery/checkpoints [x]
 Permitir reanudar operaciones.
 
-### TASK-FW-085 — Execution history
+### TASK-FW-085 — Execution history [x]
 Registrar ejecuciones, fallos y reintentos.
 
 ## Fase 7 — Integraciones de modelos
