@@ -246,17 +246,17 @@ Cada comando debe tener contrato de entrada/salida, códigos de error y tests CL
 
 ## Fase 9 — MCP
 
-### TASK-FW-120 — MCP server
+### TASK-FW-120 — MCP server [x]
 Implementar transporte y lifecycle.
 
-### TASK-FW-121 — get_project_status
-### TASK-FW-122 — get_task
-### TASK-FW-123 — get_task_context
-### TASK-FW-124 — get_traceability
-### TASK-FW-125 — submit_task_output
-### TASK-FW-126 — submit_validation
-### TASK-FW-127 — register_change
-### TASK-FW-128 — get_impact
+### TASK-FW-121 — get_project_status [x]
+### TASK-FW-122 — get_task [x]
+### TASK-FW-123 — get_task_context [x]
+### TASK-FW-124 — get_traceability [x]
+### TASK-FW-125 — submit_task_output [x]
+### TASK-FW-126 — submit_validation [x]
+### TASK-FW-127 — register_change [x]
+### TASK-FW-128 — get_impact [x]
 
 ## Fase 10 — Change Management
 
