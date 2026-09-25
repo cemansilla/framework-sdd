@@ -327,8 +327,7 @@ mod tests {
     use super::*;
     use async_trait::async_trait;
     use sdd_core::repository::RepositoryError;
-    use sdd_core::{Change, Project, Task, TaskOutputs, TaskScope, TaskStatus, TraceabilityGraph};
-    use std::collections::HashMap;
+    use sdd_core::{Change, Project, Task, TraceabilityGraph};
 
     // Mock repositories for testing
     struct MockProjectRepo;
@@ -408,13 +407,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_mcp_server_creation() {
-        let server = McpServer::new(
+        let _server = McpServer::new(
             MockProjectRepo,
             MockTaskRepo,
             MockTraceabilityRepo,
             MockChangeRepo,
         );
         // Server created successfully
-        assert!(true);
     }
 }
