@@ -142,46 +142,46 @@ Seleccionar agente compatible con tarea y skills.
 
 ## Fase 5 — Context Engineering
 
-### TASK-FW-060 — Context Bundle model
+### TASK-FW-060 — Context Bundle model [x]
 Definir contrato del bundle.
 
-### TASK-FW-061 — Explicit relation resolver
+### TASK-FW-061 — Explicit relation resolver [x]
 Resolver contexto mediante grafo y dependencias.
 
-### TASK-FW-062 — Scope resolver
+### TASK-FW-062 — Scope resolver [x]
 Determinar archivos y artefactos relevantes.
 
-### TASK-FW-063 — AST adapter
+### TASK-FW-063 — AST adapter [x]
 Integrar Tree-sitter.
 
-### TASK-FW-064 — AST signatures
+### TASK-FW-064 — AST signatures [x]
 Extraer interfaces, traits, tipos y firmas.
 
-### TASK-FW-065 — Lexical retrieval
+### TASK-FW-065 — Lexical retrieval [x]
 Implementar recuperación textual.
 
-### TASK-FW-066 — Vector retrieval port
+### TASK-FW-066 — Vector retrieval port [x]
 Definir adapter abstracto.
 
-### TASK-FW-067 — Local vector index
+### TASK-FW-067 — Local vector index [x]
 Implementar una primera implementación local.
 
-### TASK-FW-068 — Semantic ranking
+### TASK-FW-068 — Semantic ranking [x]
 Combinar señales explícitas y semánticas.
 
-### TASK-FW-069 — Token budget
+### TASK-FW-069 — Token budget [x]
 Calcular presupuesto por tarea/agente/modelo.
 
-### TASK-FW-070 — Context prioritization
+### TASK-FW-070 — Context prioritization [x]
 Aplicar P0/P1/P2/P3 y truncamiento.
 
-### TASK-FW-071 — Context inspection
+### TASK-FW-071 — Context inspection [x]
 Mostrar exactamente qué recibiría un agente.
 
-### TASK-FW-072 — Context caching
+### TASK-FW-072 — Context caching [x]
 Cachear bundles y derivados reproducibles.
 
-### TASK-FW-073 — Cache invalidation
+### TASK-FW-073 — Cache invalidation [x]
 Invalidar según hashes, versiones y dependencias.
 
 ## Fase 6 — Orchestration

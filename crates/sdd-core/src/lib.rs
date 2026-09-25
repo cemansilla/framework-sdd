@@ -3,6 +3,11 @@ pub mod agent_registry;
 pub mod architecture;
 pub mod artifact;
 pub mod change;
+pub mod context_bundle;
+pub mod context_cache;
+pub mod context_inspector;
+pub mod context_prioritizer;
+pub mod context_resolver;
 pub mod discovery;
 pub mod lifecycle;
 pub mod lifecycle_engine;
@@ -12,9 +17,12 @@ pub mod project;
 pub mod repository;
 pub mod requirement;
 pub mod resolution;
+pub mod scope_resolver;
+pub mod semantic_ranker;
 pub mod skill;
 pub mod skill_registry;
 pub mod task;
+pub mod token_budget;
 pub mod traceability;
 pub mod verification;
 
@@ -31,6 +39,14 @@ pub use change::{
     Change, ChangeOrigin, ChangeStatus, ChangeType, ChangelogEntry, ChangelogItem, ImpactAnalysis,
     RiskLevel,
 };
+pub use context_bundle::{
+    ContextBundle, ContextError, ContextFragment, ContextPriority, ContextSource, DiscardedElement,
+    TokenBudget,
+};
+pub use context_cache::{CachedBundle, ContextCache};
+pub use context_inspector::{ContextInspection, ContextInspector, FragmentInspection};
+pub use context_prioritizer::ContextPrioritizer;
+pub use context_resolver::ExplicitRelationResolver;
 pub use discovery::{
     Alternative, Answer, Assumption, Decision, DecisionStatus, Question, QuestionStatus, Risk,
     RiskStatus,
@@ -57,12 +73,15 @@ pub use resolution::{
     AgentResolver, ResolutionReasoning, ResolutionRequest, ResolutionResult, SkillResolver,
     TaskResolver,
 };
+pub use scope_resolver::{ScopeResolver, ScopeResult};
+pub use semantic_ranker::{RankedFragment, SemanticRanker};
 pub use skill::{
     InputType, OutputType, Skill, SkillApplicability, SkillCompatibility, SkillExample, SkillInput,
     SkillOutput, SkillStatus, SkillType,
 };
 pub use skill_registry::{SkillRegistry, SkillResolutionError};
 pub use task::{Effort, Task, TaskOutputs, TaskScope, TaskStatus};
+pub use token_budget::{TokenBudgetCalculator, TokenBudgetConfig};
 pub use traceability::{EdgeType, GraphEdge, GraphNode, NodeType, TraceabilityGraph};
 pub use verification::{
     Finding, FindingCategory, FindingSeverity, Review, ReviewVerdict, TestCase, TestResult,

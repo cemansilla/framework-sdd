@@ -7,6 +7,8 @@ license.workspace = true
 
 [dependencies]
 sdd-core = { path = "../sdd-core" }
+serde.workspace = true
+serde_json.workspace = true
 thiserror.workspace = true
 async-trait.workspace = true
 tracing.workspace = true
