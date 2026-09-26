@@ -1,7 +1,7 @@
 ---
 name: orchestrator
 description: Agente orquestador general del flujo de trabajo SDD.
-model: opencode-go/qwen3.7-plus
+model: opencode/longcat-2.5-preview-free
 mode: primary
 permission:
   read: allow

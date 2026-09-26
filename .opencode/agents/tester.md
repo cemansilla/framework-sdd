@@ -1,7 +1,7 @@
 ---
 name: tester
 description: Generación y ejecución de pruebas unitarias y de integración para Rust.
-model: opencode-go/deepseek-v4.1-flash
+model: opencode/nemotron-3.5-lightning-free
 temperature: 0.0
 mode: subagent
 permission:
