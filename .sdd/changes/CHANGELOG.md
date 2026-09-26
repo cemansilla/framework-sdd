@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.1.0] — 2026-09-26
+
 ### [TASK-FW-210..219] 2026-09-26 — Fase 16 — Documentación y release
 
 - **Motivo**: Cerrar el framework con documentación completa para usuarios, integradores y autores, y preparar el proceso de release.
