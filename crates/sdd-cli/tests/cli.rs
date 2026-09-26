@@ -74,6 +74,34 @@ fn changelog_runs_in_initialized_project() {
 }
 
 #[test]
+fn changelog_displays_recorded_entries_with_fields() {
+    let temp = tempfile::TempDir::new().unwrap();
+    let init = bin().current_dir(temp.path()).arg("init").output().unwrap();
+    assert!(init.status.success());
+
+    let changelog = temp.path().join(".sdd/changes/CHANGELOG.md");
+    let mut content = std::fs::read_to_string(&changelog).unwrap();
+    content.push_str(
+        "\n### [CHG-TEST] 2026-09-26 — Verification entry\n\n\
+         - **Motivo**: verify changelog end to end\n\
+         - **Tareas afectadas**: TASK-FW-204\n",
+    );
+    std::fs::write(&changelog, content).unwrap();
+
+    let output = bin()
+        .current_dir(temp.path())
+        .arg("changelog")
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(stdout.contains("1 entries recorded"), "{}", stdout);
+    assert!(stdout.contains("[CHG-TEST] 2026-09-26 — Verification entry"), "{}", stdout);
+    assert!(stdout.contains("Motivo: verify changelog end to end"), "{}", stdout);
+    assert!(stdout.contains("Tareas afectadas: TASK-FW-204"), "{}", stdout);
+}
+
+#[test]
 fn validate_passes_in_initialized_project() {
     let temp = tempfile::TempDir::new().unwrap();
     let init = bin().current_dir(temp.path()).arg("init").output().unwrap();
