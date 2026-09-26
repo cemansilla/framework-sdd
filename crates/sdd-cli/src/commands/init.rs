@@ -33,7 +33,7 @@ pub async fn execute(path: Option<PathBuf>) -> Result<()> {
     println!("✓ Created .sdd/ directory structure");
     println!("✓ Created initial configuration files");
     println!("\nNext steps:");
-    println!("  1. Edit .sdd/config.toml to configure your project");
+    println!("  1. Edit .sdd/config/project.md to configure your project");
     println!("  2. Run 'sdd brainstorm' to start exploring your idea");
     println!("  3. Run 'sdd status' to see project status");
 

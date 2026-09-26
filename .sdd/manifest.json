@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "format_version": 1,
-  "project_id": "sdd-project",
+  "project_id": "framework-sdd",
   "created_at": "2026-09-26T01:32:10.327789354Z",
   "updated_at": "2026-09-26T01:32:10.327789354Z",
   "last_migration": null,

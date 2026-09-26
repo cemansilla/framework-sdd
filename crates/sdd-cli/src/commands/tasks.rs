@@ -25,8 +25,8 @@ pub async fn execute(path: Option<PathBuf>, list: bool, task_id: Option<String>)
         println!("📋 Project Tasks");
         println!("===============");
         println!("No tasks found.");
-        println!("\nTasks are generated from requirements and architecture.");
-        println!("Run 'sdd plan' to generate tasks from your project definition.");
+        println!("\nTasks are authored as markdown files in .sdd/tasks/");
+        println!("(see the /tasks agent command to generate them).");
     } else {
         println!("Usage:");
         println!("  sdd tasks --list          List all tasks");
