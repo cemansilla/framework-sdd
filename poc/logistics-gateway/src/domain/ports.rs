@@ -4,6 +4,7 @@ use uuid::Uuid;
 
 use super::entities::{Quote, QuoteRequest, Shipment, Tracking};
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Error)]
 pub enum CarrierError {
     #[error("Carrier unavailable: {0}")]
@@ -31,6 +32,7 @@ pub trait CarrierAdapter: Send + Sync {
     fn is_healthy(&self) -> bool;
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Error)]
 pub enum RepositoryError {
     #[error("Not found: {0}")]
@@ -45,7 +47,9 @@ pub enum RepositoryError {
 pub trait QuoteRepository: Send + Sync {
     async fn save(&self, quote: &Quote) -> Result<(), RepositoryError>;
     async fn find_by_id(&self, id: Uuid) -> Result<Option<Quote>, RepositoryError>;
+    #[allow(dead_code)]
     async fn find_by_request_id(&self, request_id: Uuid) -> Result<Vec<Quote>, RepositoryError>;
+    #[allow(dead_code)]
     async fn list(&self) -> Result<Vec<Quote>, RepositoryError>;
 }
 
@@ -53,8 +57,10 @@ pub trait QuoteRepository: Send + Sync {
 pub trait ShipmentRepository: Send + Sync {
     async fn save(&self, shipment: &Shipment) -> Result<(), RepositoryError>;
     async fn find_by_id(&self, id: Uuid) -> Result<Option<Shipment>, RepositoryError>;
+    #[allow(dead_code)]
     async fn find_by_quote_id(&self, quote_id: Uuid) -> Result<Option<Shipment>, RepositoryError>;
     async fn list(&self) -> Result<Vec<Shipment>, RepositoryError>;
+    #[allow(dead_code)]
     async fn update_status(
         &self,
         id: Uuid,
@@ -65,6 +71,7 @@ pub trait ShipmentRepository: Send + Sync {
 #[async_trait]
 pub trait TrackingRepository: Send + Sync {
     async fn save(&self, tracking: &Tracking) -> Result<(), RepositoryError>;
+    #[allow(dead_code)]
     async fn find_by_shipment_id(
         &self,
         shipment_id: Uuid,
@@ -81,5 +88,9 @@ pub struct MarginContext {
 }
 
 pub trait MarginPolicy: Send + Sync {
-    fn apply(&self, base_price: Money, context: &MarginContext) -> (Money, super::entities::MarginBreakdown);
+    fn apply(
+        &self,
+        base_price: Money,
+        context: &MarginContext,
+    ) -> (Money, super::entities::MarginBreakdown);
 }

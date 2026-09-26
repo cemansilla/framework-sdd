@@ -85,11 +85,7 @@ impl ShipmentRepository for InMemoryShipmentRepository {
         Ok(shipments.clone())
     }
 
-    async fn update_status(
-        &self,
-        id: Uuid,
-        status: ShipmentStatus,
-    ) -> Result<(), RepositoryError> {
+    async fn update_status(&self, id: Uuid, status: ShipmentStatus) -> Result<(), RepositoryError> {
         let mut shipments = self.shipments.write().await;
         if let Some(shipment) = shipments.iter_mut().find(|s| s.id == id) {
             shipment.status = status;
@@ -118,7 +114,9 @@ impl TrackingRepository for InMemoryTrackingRepository {
     async fn save(&self, tracking: &Tracking) -> Result<(), RepositoryError> {
         let mut trackings = self.trackings.write().await;
         // Update if exists, otherwise insert
-        if let Some(existing) = trackings.iter_mut().find(|t| t.shipment_id == tracking.shipment_id)
+        if let Some(existing) = trackings
+            .iter_mut()
+            .find(|t| t.shipment_id == tracking.shipment_id)
         {
             *existing = tracking.clone();
         } else {

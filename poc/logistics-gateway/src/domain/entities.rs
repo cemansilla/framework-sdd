@@ -160,6 +160,7 @@ impl Shipment {
         }
     }
 
+    #[allow(dead_code)]
     pub fn update_status(&mut self, status: ShipmentStatus) {
         self.status = status;
     }
@@ -192,7 +193,12 @@ impl Tracking {
         }
     }
 
-    pub fn add_event(&mut self, status: ShipmentStatus, description: impl Into<String>, location: Option<String>) {
+    pub fn add_event(
+        &mut self,
+        status: ShipmentStatus,
+        description: impl Into<String>,
+        location: Option<String>,
+    ) {
         let description_str = description.into();
         self.status = status.clone();
         self.status_description = description_str.clone();
@@ -215,6 +221,7 @@ pub struct TrackingEvent {
     pub timestamp: DateTime<Utc>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Carrier {
     pub id: String,
@@ -223,6 +230,7 @@ pub struct Carrier {
     pub capabilities: Vec<CarrierCapability>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum CarrierCapability {
     Quote,

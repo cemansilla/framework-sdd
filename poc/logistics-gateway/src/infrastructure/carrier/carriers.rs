@@ -46,7 +46,7 @@ pub fn create_all_carriers() -> Vec<Arc<dyn CarrierAdapter>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::{Address, CarrierAdapter, Dimensions, Parcel, QuoteRequest};
+    use crate::domain::{Address, Dimensions, Parcel, QuoteRequest};
 
     fn create_test_request() -> QuoteRequest {
         let origin = Address::new("Street 1", "Buenos Aires", "CABA", "C1000", "AR");
@@ -55,11 +55,25 @@ mod tests {
         QuoteRequest::new(origin, destination, parcel)
     }
 
+    // Production configs include random failure/timeout simulation, so retry
+    // a few times to keep tests deterministic in practice.
+    async fn quote_with_retry(
+        carrier: &Arc<dyn CarrierAdapter>,
+        request: &QuoteRequest,
+    ) -> crate::domain::Quote {
+        for _ in 0..20 {
+            if let Ok(quote) = carrier.quote(request).await {
+                return quote;
+            }
+        }
+        panic!("quote should succeed within retries");
+    }
+
     #[tokio::test]
     async fn test_oca_adapter() {
         let carrier = create_oca_adapter();
         let request = create_test_request();
-        let quote = carrier.quote(&request).await.unwrap();
+        let quote = quote_with_retry(&carrier, &request).await;
         assert_eq!(quote.carrier, "oca");
     }
 
@@ -67,7 +81,7 @@ mod tests {
     async fn test_andreani_adapter() {
         let carrier = create_andreani_adapter();
         let request = create_test_request();
-        let quote = carrier.quote(&request).await.unwrap();
+        let quote = quote_with_retry(&carrier, &request).await;
         assert_eq!(quote.carrier, "andreani");
     }
 
@@ -75,7 +89,7 @@ mod tests {
     async fn test_express_adapter() {
         let carrier = create_express_adapter();
         let request = create_test_request();
-        let quote = carrier.quote(&request).await.unwrap();
+        let quote = quote_with_retry(&carrier, &request).await;
         assert_eq!(quote.carrier, "express");
     }
 
@@ -86,7 +100,7 @@ mod tests {
 
         let request = create_test_request();
         for carrier in carriers {
-            let quote = carrier.quote(&request).await.unwrap();
+            let quote = quote_with_retry(&carrier, &request).await;
             assert!(!quote.carrier.is_empty());
         }
     }

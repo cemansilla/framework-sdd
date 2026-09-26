@@ -12,6 +12,7 @@ pub enum ShipmentServiceError {
     CarrierError(#[from] CarrierError),
     #[error("Repository error: {0}")]
     RepositoryError(#[from] RepositoryError),
+    #[allow(dead_code)]
     #[error("Quote not found: {0}")]
     QuoteNotFound(Uuid),
     #[error("Quote expired: {0}")]
@@ -61,11 +62,7 @@ impl ShipmentService {
         self.shipment_repo.save(&shipment).await?;
 
         // Initialize tracking
-        let tracking = Tracking::new(
-            shipment.id,
-            ShipmentStatus::Created,
-            "Shipment created",
-        );
+        let tracking = Tracking::new(shipment.id, ShipmentStatus::Created, "Shipment created");
         self.tracking_repo.save(&tracking).await?;
 
         Ok(shipment)
@@ -97,6 +94,7 @@ impl ShipmentService {
         Ok(tracking)
     }
 
+    #[allow(dead_code)]
     pub async fn list_shipments(&self) -> Result<Vec<Shipment>, ShipmentServiceError> {
         Ok(self.shipment_repo.list().await?)
     }

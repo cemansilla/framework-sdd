@@ -17,12 +17,17 @@ pub struct MarginRule {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginCondition {
     Always,
-    WeightRange { min_kg: f64, max_kg: f64 },
+    WeightRange {
+        min_kg: f64,
+        max_kg: f64,
+    },
     PriceRange {
         min_amount: Decimal,
         max_amount: Decimal,
     },
-    Zone { zones: Vec<String> },
+    Zone {
+        zones: Vec<String>,
+    },
 }
 
 impl MarginCondition {
@@ -36,8 +41,7 @@ impl MarginCondition {
                 min_amount,
                 max_amount,
             } => {
-                context.base_price.amount >= *min_amount
-                    && context.base_price.amount <= *max_amount
+                context.base_price.amount >= *min_amount && context.base_price.amount <= *max_amount
             }
             MarginCondition::Zone { zones } => {
                 zones.contains(&context.origin_zone) || zones.contains(&context.destination_zone)
@@ -68,6 +72,7 @@ pub struct MarginEngine {
 }
 
 impl MarginEngine {
+    #[allow(dead_code)]
     pub fn new(rules: Vec<MarginRule>) -> Self {
         Self { rules }
     }
@@ -164,7 +169,7 @@ mod tests {
         };
 
         let (final_price, breakdown) = engine.apply(base_price, &context);
-        assert_eq!(final_price.amount.to_string(), "1100.0");
+        assert_eq!(final_price.amount, Decimal::from(1100));
         assert_eq!(breakdown.adjustments.len(), 1);
     }
 
@@ -204,7 +209,7 @@ mod tests {
 
         let (final_price, breakdown) = engine.apply(base_price, &context);
         // 1000 + 15% (150) + 10% of 1150 (115) = 1265
-        assert_eq!(final_price.amount.to_string(), "1265.0");
+        assert_eq!(final_price.amount, Decimal::from(1265));
         assert_eq!(breakdown.adjustments.len(), 2);
     }
 }

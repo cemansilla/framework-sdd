@@ -4,8 +4,7 @@ use std::time::Duration;
 use uuid::Uuid;
 
 use crate::domain::{
-    Address, CarrierAdapter, CarrierError, Dimensions, Parcel, Quote, QuoteRequest, Shipment,
-    ShipmentStatus, Tracking,
+    Address, CarrierAdapter, CarrierError, Quote, QuoteRequest, Shipment, ShipmentStatus, Tracking,
 };
 
 #[derive(Debug, Clone)]

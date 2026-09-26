@@ -2,8 +2,8 @@ use std::sync::Arc;
 use uuid::Uuid;
 
 use crate::domain::{
-    CarrierAdapter, CarrierError, MarginBreakdown, MarginContext, MarginPolicy, Quote,
-    QuoteRepository, QuoteRequest, RepositoryError,
+    CarrierAdapter, CarrierError, MarginContext, MarginPolicy, Quote, QuoteRepository,
+    QuoteRequest, RepositoryError,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -14,6 +14,7 @@ pub enum QuoteServiceError {
     RepositoryError(#[from] RepositoryError),
     #[error("No carriers available")]
     NoCarriersAvailable,
+    #[allow(dead_code)]
     #[error("Quote not found: {0}")]
     NotFound(Uuid),
 }
@@ -37,7 +38,10 @@ impl QuoteService {
         }
     }
 
-    pub async fn request_quote(&self, request: QuoteRequest) -> Result<Vec<Quote>, QuoteServiceError> {
+    pub async fn request_quote(
+        &self,
+        request: QuoteRequest,
+    ) -> Result<Vec<Quote>, QuoteServiceError> {
         if self.carriers.is_empty() {
             return Err(QuoteServiceError::NoCarriersAvailable);
         }
@@ -65,7 +69,7 @@ impl QuoteService {
 
         for result in results {
             match result {
-                Ok((carrier_name, mut quote)) => {
+                Ok((_carrier_name, mut quote)) => {
                     // Apply margin
                     let context = MarginContext {
                         weight_kg: request.parcel.billable_weight_kg(),
@@ -74,7 +78,8 @@ impl QuoteService {
                         base_price: quote.base_price.clone(),
                     };
 
-                    let (final_price, breakdown) = self.margin_policy.apply(quote.base_price.clone(), &context);
+                    let (final_price, breakdown) =
+                        self.margin_policy.apply(quote.base_price.clone(), &context);
                     quote = quote.with_final_price(final_price, breakdown);
 
                     // Save quote
@@ -95,6 +100,7 @@ impl QuoteService {
         Ok(quotes)
     }
 
+    #[allow(dead_code)]
     pub async fn get_quote(&self, id: Uuid) -> Result<Quote, QuoteServiceError> {
         self.quote_repo
             .find_by_id(id)
@@ -102,7 +108,11 @@ impl QuoteService {
             .ok_or(QuoteServiceError::NotFound(id))
     }
 
-    pub async fn get_quotes_by_request(&self, request_id: Uuid) -> Result<Vec<Quote>, QuoteServiceError> {
+    #[allow(dead_code)]
+    pub async fn get_quotes_by_request(
+        &self,
+        request_id: Uuid,
+    ) -> Result<Vec<Quote>, QuoteServiceError> {
         Ok(self.quote_repo.find_by_request_id(request_id).await?)
     }
 }

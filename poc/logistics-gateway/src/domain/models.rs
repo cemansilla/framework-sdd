@@ -27,6 +27,7 @@ impl Address {
         }
     }
 
+    #[allow(dead_code)]
     pub fn validate(&self) -> Result<(), ValidationError> {
         if self.street.trim().is_empty() {
             return Err(ValidationError::EmptyField("street".to_string()));
@@ -127,7 +128,7 @@ impl Money {
 
     pub fn from_f64(amount: f64, currency: impl Into<String>) -> Self {
         Self {
-            amount: rust_decimal::Decimal::from_f64_retain(amount).unwrap_or_default(),
+            amount: amount.to_string().parse().unwrap_or_default(),
             currency: currency.into(),
         }
     }
@@ -141,12 +142,17 @@ impl Money {
 
     pub fn multiply(&self, factor: f64) -> Money {
         Money {
-            amount: self.amount * rust_decimal::Decimal::from_f64_retain(factor).unwrap_or_default(),
+            amount: self.amount
+                * factor
+                    .to_string()
+                    .parse::<rust_decimal::Decimal>()
+                    .unwrap_or_default(),
             currency: self.currency.clone(),
         }
     }
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Error)]
 pub enum ValidationError {
     #[error("Empty field: {0}")]
