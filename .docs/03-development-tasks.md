@@ -341,13 +341,13 @@ Determinar qué gates deben repetirse.
 
 ## Fase 16 — Documentation and release
 
-### TASK-FW-210 — User documentation
-### TASK-FW-211 — Agent/integration documentation
-### TASK-FW-212 — Architecture documentation
-### TASK-FW-213 — CLI reference
-### TASK-FW-214 — MCP reference
-### TASK-FW-215 — Skill authoring guide
-### TASK-FW-216 — Agent authoring guide
-### TASK-FW-217 — Release packaging
-### TASK-FW-218 — Versioning/release process
-### TASK-FW-219 — Final E2E release validation
+### TASK-FW-210 — User documentation [x]
+### TASK-FW-211 — Agent/integration documentation [x]
+### TASK-FW-212 — Architecture documentation [x]
+### TASK-FW-213 — CLI reference [x]
+### TASK-FW-214 — MCP reference [x]
+### TASK-FW-215 — Skill authoring guide [x]
+### TASK-FW-216 — Agent authoring guide [x]
+### TASK-FW-217 — Release packaging [x]
+### TASK-FW-218 — Versioning/release process [x]
+### TASK-FW-219 — Final E2E release validation [x]

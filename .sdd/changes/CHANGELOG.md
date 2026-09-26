@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [TASK-FW-210..219] 2026-09-26 — Fase 16 — Documentación y release
+
+- **Motivo**: Cerrar el framework con documentación completa para usuarios, integradores y autores, y preparar el proceso de release.
+- **Origen**: feature
+- **Artefactos afectados**: README.md, LICENSE, docs/ (user-guide, architecture, agents-integrations, cli-reference, mcp-reference, skill-authoring, agent-authoring, release-process), crates/*/Cargo.toml, .docs/03-development-tasks.md
+- **Impacto**: 8 guías nuevas con índices enlazados desde el README; binario verificado en E2E (init/status/validate/changelog sobre el repo real: 0 errores y 0 warnings); metadatos de empaquetado (description, repository, publish=false) y LICENSE MIT; proceso de versionado y checklist de release documentados
+- **Tareas afectadas**: TASK-FW-210..219
+
 ### [TASK-FW-200..205] 2026-09-26 — Fase 15 — Framework self-hosting
 
 - **Motivo**: Ejecutar el flujo SDD sobre el propio framework: una feature (changelog lee el disco), un cambio (CHG-001), un fix desde test fallido, sincronización de documentación, verificación de changelog y de reproducibilidad.
