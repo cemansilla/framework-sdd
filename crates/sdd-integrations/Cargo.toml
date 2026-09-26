@@ -4,6 +4,9 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
+repository.workspace = true
+publish = false
+description = "SDD AI Development Harness agent contracts and model profiles"
 
 [dependencies]
 sdd-core = { path = "../sdd-core" }

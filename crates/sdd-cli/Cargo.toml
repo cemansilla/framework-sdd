@@ -4,6 +4,13 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
+repository.workspace = true
+publish = false
+description = "SDD AI Development Harness command-line interface (binary: sdd)"
+
+[[bin]]
+name = "sdd"
+path = "src/main.rs"
 
 [dependencies]
 sdd-core = { path = "../sdd-core" }
@@ -17,3 +24,6 @@ tokio.workspace = true
 anyhow.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+
+[dev-dependencies]
+tempfile = "3"

@@ -312,42 +312,42 @@ Determinar qué gates deben repetirse.
 
 ## Fase 14 — PoC
 
-### TASK-FW-180 — Initialize Logistics Gateway
-### TASK-FW-181 — PoC brief/discovery
-### TASK-FW-182 — PoC requirements
-### TASK-FW-183 — PoC domain model
-### TASK-FW-184 — PoC architecture
-### TASK-FW-185 — PoC technical design
-### TASK-FW-186 — PoC task generation
-### TASK-FW-187 — Mock carrier interfaces
-### TASK-FW-188 — Quote endpoint
-### TASK-FW-189 — Carrier adapters
-### TASK-FW-190 — Margin engine
-### TASK-FW-191 — Shipping order flow
-### TASK-FW-192 — Persistence
-### TASK-FW-193 — Testing
-### TASK-FW-194 — Review/QA
-### TASK-FW-195 — Change/fix exercise
-### TASK-FW-196 — PoC final audit
+### TASK-FW-180 — Initialize Logistics Gateway [x]
+### TASK-FW-181 — PoC brief/discovery [x]
+### TASK-FW-182 — PoC requirements [x]
+### TASK-FW-183 — PoC domain model [x]
+### TASK-FW-184 — PoC architecture [x]
+### TASK-FW-185 — PoC technical design [x]
+### TASK-FW-186 — PoC task generation [x]
+### TASK-FW-187 — Mock carrier interfaces [x]
+### TASK-FW-188 — Quote endpoint [x]
+### TASK-FW-189 — Carrier adapters [x]
+### TASK-FW-190 — Margin engine [x]
+### TASK-FW-191 — Shipping order flow [x]
+### TASK-FW-192 — Persistence [x]
+### TASK-FW-193 — Testing [x]
+### TASK-FW-194 — Review/QA [x]
+### TASK-FW-195 — Change/fix exercise [x]
+### TASK-FW-196 — PoC final audit [x]
 
 ## Fase 15 — Framework self-hosting
 
-### TASK-FW-200 — Develop a feature using SDD
-### TASK-FW-201 — Develop a change using SDD
-### TASK-FW-202 — Develop a fix from a failed test
-### TASK-FW-203 — Verify documentation synchronization
-### TASK-FW-204 — Verify changelog
-### TASK-FW-205 — Verify reproducibility
+### TASK-FW-200 — Develop a feature using SDD [x]
+### TASK-FW-201 — Develop a change using SDD [x]
+### TASK-FW-202 — Develop a fix from a failed test [x]
+### TASK-FW-203 — Verify documentation synchronization [x]
+### TASK-FW-204 — Verify changelog [x]
+### TASK-FW-205 — Verify reproducibility [x]
 
 ## Fase 16 — Documentation and release
 
-### TASK-FW-210 — User documentation
-### TASK-FW-211 — Agent/integration documentation
-### TASK-FW-212 — Architecture documentation
-### TASK-FW-213 — CLI reference
-### TASK-FW-214 — MCP reference
-### TASK-FW-215 — Skill authoring guide
-### TASK-FW-216 — Agent authoring guide
-### TASK-FW-217 — Release packaging
-### TASK-FW-218 — Versioning/release process
-### TASK-FW-219 — Final E2E release validation
+### TASK-FW-210 — User documentation [x]
+### TASK-FW-211 — Agent/integration documentation [x]
+### TASK-FW-212 — Architecture documentation [x]
+### TASK-FW-213 — CLI reference [x]
+### TASK-FW-214 — MCP reference [x]
+### TASK-FW-215 — Skill authoring guide [x]
+### TASK-FW-216 — Agent authoring guide [x]
+### TASK-FW-217 — Release packaging [x]
+### TASK-FW-218 — Versioning/release process [x]
+### TASK-FW-219 — Final E2E release validation [x]

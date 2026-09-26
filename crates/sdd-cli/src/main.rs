@@ -65,7 +65,7 @@ enum Commands {
         #[arg(short, long)]
         path: Option<PathBuf>,
         /// Show current architecture
-        #[arg(short, long)]
+        #[arg(long)]
         show: bool,
         /// Define architecture style
         #[arg(short, long)]
