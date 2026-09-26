@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Auditoría de seguridad, calidad de código y adherencia a la especificación.
-model: opencode-go/glm-5.3-flash
+model: opencode/muse-spark-1.3-contributor-free
 temperature: 0.1
 mode: subagent
 permission:

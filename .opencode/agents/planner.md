@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Desglose de especificaciones en tareas granulares con criterios de aceptación.
-model: opencode-go/qwen3.7-plus
+model: opencode/ling-3.0-flash-fin-free
 temperature: 0.1
 mode: subagent
 permission:

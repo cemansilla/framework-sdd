@@ -351,3 +351,7 @@ Determinar qué gates deben repetirse.
 ### TASK-FW-217 — Release packaging [x]
 ### TASK-FW-218 — Versioning/release process [x]
 ### TASK-FW-219 — Final E2E release validation [x]
+
+## Mantenimiento post-release
+
+### TASK-FW-220 — Defaults de modelos gratuitos [x]

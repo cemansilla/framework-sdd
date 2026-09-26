@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [TASK-FW-220] 2026-09-26 — Defaults a modelos gratuitos (OpenCode Zen)
+
+- **Motivo**: Se agotó la cuota del plan pago `opencode-go`; los agentes y los defaults globales deben correr con modelos gratuitos ($0/Mtok) sin perder acceso a los de pago.
+- **Origen**: change — cambio de configuración de modelos
+- **Artefactos afectados**: .opencode/agents/*.md (6 agentes), opencode.json, AGENTS.md, docs/agent-authoring.md, docs/user-guide.md
+- **Impacto**: orchestrator=longcat-2.5-preview-free, architect=nemotron-3-ultra-free, planner=ling-3.0-flash-fin-free, coder=big-pickle, tester=nemotron-3.5-lightning-free, reviewer=muse-spark-1.3-contributor-free; `model`=longcat y `small_model`=mimo-v2.6-flash-free (títulos/resúmenes/compactación sin cuota); `opencode-go/*` intacto para selección manual con `/models`; matriz rol→modelo (gratis vs pago) documentada en AGENTS.md y docs/agent-authoring.md
+- **Tareas afectadas**: TASK-FW-220
+
 ## [v0.1.0] — 2026-09-26
 
 ### [TASK-FW-210..219] 2026-09-26 — Fase 16 — Documentación y release
