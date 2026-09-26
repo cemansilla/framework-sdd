@@ -33,6 +33,15 @@ consultar el disco, por lo que el changelog creado por `sdd init` es inútil.
 - **Campo**: valor
 ```
 
+Entradas anidadas bajo `## [Unreleased]` (convención Keep a Changelog) usando
+encabezados de nivel 3 — agregado por CHG-001:
+
+```markdown
+## [Unreleased]
+
+### [CHG-001] 2026-09-26 — Título del cambio
+```
+
 ## Fuente de verdad
 
 La especificación §20 define los campos que cada cambio relevante debe registrar:

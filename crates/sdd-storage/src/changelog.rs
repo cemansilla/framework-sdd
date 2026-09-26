@@ -1,9 +1,10 @@
 //! Parser for `.sdd/changes/CHANGELOG.md`.
 //!
-//! The changelog is plain markdown. Entries are level-2 headings of the form
-//! `## [ID] <date> — <title>` followed by optional `- **Key**: value` field
-//! lines (see spec §20: identificador, fecha, motivo, origen, artefactos
-//! afectados, impacto, tareas afectadas).
+//! The changelog is plain markdown. Entries are `## [ID] <date> — <title>`
+//! headings, or `### [ID] …` headings nested under `## [Unreleased]`
+//! (Keep a Changelog convention), followed by optional `- **Key**: value`
+//! field lines (see spec §20: identificador, fecha, motivo, origen,
+//! artefactos afectados, impacto, tareas afectadas).
 
 /// One parsed changelog entry.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -37,7 +38,12 @@ pub fn parse_changelog(markdown: &str) -> Vec<ChangelogEntry> {
     let mut current: Option<ChangelogEntry> = None;
 
     for line in markdown.lines() {
-        if let Some(rest) = line.strip_prefix("## [") {
+        // Level-2 (`## [ID]`) and level-3 (`### [ID]`, e.g. nested under
+        // `## [Unreleased]`) headings both start a new entry.
+        let heading = line
+            .strip_prefix("### [")
+            .or_else(|| line.strip_prefix("## ["));
+        if let Some(rest) = heading {
             if let Some(entry) = current.take() {
                 entries.push(entry);
             }
@@ -63,7 +69,7 @@ pub fn parse_changelog(markdown: &str) -> Vec<ChangelogEntry> {
     entries
 }
 
-/// Parse the part of a level-2 heading that follows `## [`.
+/// Parse the part of a `## [ID]`/`### [ID]` heading that follows the bracket.
 ///
 /// Returns `None` for the `[Unreleased]` section marker.
 fn parse_heading(rest: &str) -> Option<ChangelogEntry> {
@@ -186,6 +192,24 @@ mod tests {
     #[test]
     fn test_multiple_entries_preserve_order() {
         let markdown = "## [CHG-002] 2026-01-02 — Second\n\n## [CHG-001] 2026-01-01 — First\n";
+        let entries = parse_changelog(markdown);
+        let ids: Vec<&str> = entries.iter().map(|e| e.id.as_str()).collect();
+        assert_eq!(ids, vec!["CHG-002", "CHG-001"]);
+    }
+
+    #[test]
+    fn test_nested_entry_under_unreleased() {
+        let markdown = "## [Unreleased]\n\n### [CHG-001] 2026-09-26 — Nested entry\n\n- **Origen**: change\n";
+        let entries = parse_changelog(markdown);
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].id, "CHG-001");
+        assert_eq!(entries[0].title, "Nested entry");
+        assert_eq!(entries[0].field("origen"), Some("change"));
+    }
+
+    #[test]
+    fn test_mixed_heading_levels_preserve_order() {
+        let markdown = "## [CHG-002] 2026-01-02 — Level two\n\n## [Unreleased]\n\n### [CHG-001] 2026-01-01 — Level three\n";
         let entries = parse_changelog(markdown);
         let ids: Vec<&str> = entries.iter().map(|e| e.id.as_str()).collect();
         assert_eq!(ids, vec!["CHG-002", "CHG-001"]);
