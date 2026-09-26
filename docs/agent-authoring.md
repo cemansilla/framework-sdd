@@ -83,18 +83,58 @@ Reglas:
 
 ## 4. Asignación de modelos (matriz actual)
 
-| Agente | Sub-comando | Modelo | Mode |
-|--------|-------------|--------|------|
-| orchestrator | `/orchestrate` | `qwen3.7-plus` | primary |
-| architect | `/plan` | `kimi-k3` | subagent |
-| planner | `/tasks` | `qwen3.7-plus` | subagent |
-| coder | `/implement` | `kimi-k2.7-code` | subagent |
-| tester | `/test` | `deepseek-v4.1-flash` | subagent |
-| reviewer | `/review` | `glm-5.3-flash` | subagent |
+| Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual) | Mode |
+|--------|-------------|-----------------------------|------------------------------|------|
+| orchestrator | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | primary |
+| architect | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | subagent |
+| planner | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | subagent |
+| coder | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | subagent |
+| tester | `/test` | `opencode/nemotron-3.5-lightning-free` | `opencode-go/deepseek-v4.1-flash` | subagent |
+| reviewer | `/review` | `opencode/muse-spark-1.3-contributor-free` | `opencode-go/glm-5.3-flash` | subagent |
 
-Criterio: planificación → modelos de razonamiento; implementación → modelo
-de código; verificación → modelos rápidos baratos; review → modelo de
-auditoría con temperatura baja.
+Criterio: orquestación → ventana de contexto grande (1M para mantener el
+estado del ciclo + salidas de subagentes); arquitectura → rigor lógico +
+contexto; planificación → estructuración y formato; implementación → modelo
+validado en código real; verificación → modelos rápidos; review → contexto
+amplio para auditar diff + spec.
+
+### 4.1 Modelos gratuitos vs de pago
+
+Los 8 modelos gratuitos disponibles (`opencode/*`, `$0/Mtok` en OpenCode Zen):
+
+| Modelo | ctx | output | Rol recomendado |
+|--------|-----|--------|-----------------|
+| `longcat-2.5-preview-free` | 1.0M | 131K | orquestación, lectura de repo grande (**preview**) |
+| `nemotron-3-ultra-free` | 1.0M | 128K | arquitectura y auditoría (mayor rigor) |
+| `muse-spark-1.3-contributor-free` | 1.05M | 131K | review con contexto grande; ideación |
+| `space-bunny-free` | 1.05M | 524K | respaldo de contexto/output grande |
+| `ling-3.0-flash-fin-free` | 262K | 32K | planificación, estructuración de tablas/reglas |
+| `nemotron-3.5-lightning-free` | 262K | 262K | QA rápido, linter-like |
+| `big-pickle` | 200K | 32K | codificación, brainstorming |
+| `mimo-v2.6-flash-free` | 200K | 32K | `small_model`: títulos/resúmenes/compactación |
+
+Reglas:
+
+1. **El sufijo `-free` no prueba gratuidad**: `deepseek-v4.1-flash` y
+   `muse-spark-1.3` son de pago; `big-pickle` es gratis. Verificar con
+   `opencode models -v` (costos) o models.dev.
+2. **Defaults = gratis** en `.opencode/agents/*.md` y `opencode.json`;
+   los de pago se eligen a mano con `/models` (nada está deshabilitado).
+3. `model`/`small_model` en `opencode.json` cubren los built-in
+   (`build`/`plan`) y las tareas ligeras (títulos, compactación).
+4. Los modelos gratuitos pueden cambiar o retirarse (los `*-preview-*` con
+   más frecuencia): documentar siempre un respaldo por rol (p. ej.
+   `space-bunny-free` para contexto grande).
+5. Los sustitutos gratuitos "de familia" (`qwen3.6-plus-free`,
+   `kimi-k2.5-free`, `glm-5-free`, `deepseek-v4-flash-free`) existen en
+   models.dev pero **no están habilitados** en esta instalación; si
+   aparecen en `opencode models`, son los primeros candidatos por
+   continuidad de familia.
+
+**Brainstorming (rol sin agente propio):** la fase de ideación la ejecuta
+el `orchestrator`; si se dispara a mano, usar `opencode/big-pickle`
+(versatilidad, sin sesgo estructural) o
+`opencode/muse-spark-1.3-contributor-free` (desglose conceptual).
 
 ## 5. Flujo entre agentes
 

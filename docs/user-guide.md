@@ -110,7 +110,15 @@ Los registros individuales con análisis de impacto viven en
 
 El harness se usa desde OpenCode con los agentes definidos en
 `.opencode/agents/` y las skills en `.opencode/skills/`. El punto de entrada
-es el comando `/orchestrate`. Ver:
+es el comando `/orchestrate`.
+
+**Modelos:** los agentes usan por defecto modelos **gratuitos** de OpenCode
+Zen (`opencode/*-free`, $0/Mtok); los modelos de pago se eligen a mano con
+`/models` sin cambiar nada en el repo. La matriz rol → modelo (gratis vs
+pago) está en [`AGENTS.md`](../AGENTS.md) y
+[authoring de agentes](agent-authoring.md#4-asignación-de-modelos-matriz-actual).
+
+Ver:
 
 - [Agentes e integraciones](agents-integrations.md)
 - [Authoring de agentes](agent-authoring.md)

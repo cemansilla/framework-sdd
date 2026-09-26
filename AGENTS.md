@@ -6,14 +6,27 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 ## Matriz de Agentes
 
-| Agente | Sub-comando | Modelo | Mode | Rol Principal |
-| :--- | :--- | :--- | :--- | :--- |
-| **Orquestador** | `/orchestrate` | `qwen3.7-plus` | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
-| **Arquitecto** | `/plan` | `kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
-| **Planificador** | `/tasks` | `qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
-| **Desarrollador** | `/implement` | `kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
-| **QA / Tester** | `/test` | `deepseek-v4.1-flash` | `subagent` | Generación y ejecución de pruebas unitarias e integración. |
-| **Revisor** | `/review` | `glm-5.3-flash` | `subagent` | Auditoría de seguridad, calidad y adherencia a la especificación. |
+| Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual vía `/models`) | Mode | Rol Principal |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Orquestador** | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
+| **Arquitecto** | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
+| **Planificador** | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
+| **Desarrollador** | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
+| **QA / Tester** | `/test` | `opencode/nemotron-3.5-lightning-free` | `opencode-go/deepseek-v4.1-flash` | `subagent` | Generación y ejecución de pruebas unitarias e integración. |
+| **Revisor** | `/review` | `opencode/muse-spark-1.3-contributor-free` | `opencode-go/glm-5.3-flash` | `subagent` | Auditoría de seguridad, calidad y adherencia a la especificación. |
+
+**Notas de modelos:**
+
+- Todos los defaults son **gratuitos** (`$0/Mtok` en OpenCode Zen) y viven en
+  `.opencode/agents/*.md` + `opencode.json` (`model`, `small_model`).
+- Los modelos de pago (`opencode-go/*`, `openai/*`) **siguen disponibles**
+  para selección manual con `/models`; nada está deshabilitado.
+- `small_model` (`opencode/mimo-v2.6-flash-free`) cubre títulos, resúmenes y
+  compactación para no consumir cuota de pago.
+- El sufijo `-free` **no prueba gratuidad**: `deepseek-v4.1-flash` y
+  `muse-spark-1.3` son de pago sin sufijo; `big-pickle` es gratis sin
+  sufijo. La fuente de verdad es el costo en `opencode models -v` o
+  models.dev. Detalle y alternativas: [`docs/agent-authoring.md`](docs/agent-authoring.md).
 
 ---
 
