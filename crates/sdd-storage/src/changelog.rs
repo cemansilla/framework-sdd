@@ -71,11 +71,12 @@ pub fn parse_changelog(markdown: &str) -> Vec<ChangelogEntry> {
 
 /// Parse the part of a `## [ID]`/`### [ID]` heading that follows the bracket.
 ///
-/// Returns `None` for the `[Unreleased]` section marker.
+/// Returns `None` for section markers (`[Unreleased]`, release versions
+/// like `[v0.1.0]` or `[0.1.0]`).
 fn parse_heading(rest: &str) -> Option<ChangelogEntry> {
     let close = rest.find(']')?;
     let id = rest[..close].trim();
-    if id.is_empty() || id.eq_ignore_ascii_case("Unreleased") {
+    if id.is_empty() || is_section_marker(id) {
         return None;
     }
 
@@ -96,6 +97,16 @@ fn parse_heading(rest: &str) -> Option<ChangelogEntry> {
         title,
         fields: Vec::new(),
     })
+}
+
+/// Whether a bracketed heading id is a section marker rather than an entry
+/// id: `[Unreleased]`, a version like `[v0.1.0]`/`[0.1.0]`.
+fn is_section_marker(id: &str) -> bool {
+    if id.eq_ignore_ascii_case("Unreleased") {
+        return true;
+    }
+    let digits = id.strip_prefix(['v', 'V']).unwrap_or(id);
+    !digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit() || b == b'.')
 }
 
 /// If `s` starts with an ISO date (`YYYY-MM-DD`), return it and the rest.
@@ -219,6 +230,27 @@ mod tests {
         let entries = parse_changelog(markdown);
         let ids: Vec<&str> = entries.iter().map(|e| e.id.as_str()).collect();
         assert_eq!(ids, vec!["CHG-002", "CHG-001"]);
+    }
+
+    #[test]
+    fn test_version_section_marker_is_skipped() {
+        let markdown = "## [v0.1.0] — 2026-09-26\n\n### [TASK-FW-210] 2026-09-26 — Entry\n";
+        let entries = parse_changelog(markdown);
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].id, "TASK-FW-210");
+    }
+
+    #[test]
+    fn test_version_marker_without_v_prefix_is_skipped() {
+        let entries = parse_changelog("## [0.1.0] 2026-09-26 — Release\n");
+        assert!(entries.is_empty());
+    }
+
+    #[test]
+    fn test_changelog_like_id_is_not_a_marker() {
+        let entries = parse_changelog("## [REQ-CLI-001] 2026-09-26 — Entry\n");
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].id, "REQ-CLI-001");
     }
 
     #[test]
