@@ -8,6 +8,7 @@ members = [
     "crates/sdd-mcp",
     "crates/sdd-index",
     "crates/sdd-integrations",
+    "poc/logistics-gateway",
 ]
 
 [workspace.package]
