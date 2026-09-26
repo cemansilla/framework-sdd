@@ -96,9 +96,21 @@ fn changelog_displays_recorded_entries_with_fields() {
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(stdout.contains("1 entries recorded"), "{}", stdout);
-    assert!(stdout.contains("[CHG-TEST] 2026-09-26 — Verification entry"), "{}", stdout);
-    assert!(stdout.contains("Motivo: verify changelog end to end"), "{}", stdout);
-    assert!(stdout.contains("Tareas afectadas: TASK-FW-204"), "{}", stdout);
+    assert!(
+        stdout.contains("[CHG-TEST] 2026-09-26 — Verification entry"),
+        "{}",
+        stdout
+    );
+    assert!(
+        stdout.contains("Motivo: verify changelog end to end"),
+        "{}",
+        stdout
+    );
+    assert!(
+        stdout.contains("Tareas afectadas: TASK-FW-204"),
+        "{}",
+        stdout
+    );
 }
 
 #[test]
@@ -148,7 +160,11 @@ fn status_distinguishes_empty_directories_from_content() {
     let init = bin().current_dir(temp.path()).arg("init").output().unwrap();
     assert!(init.status.success());
 
-    let output = bin().current_dir(temp.path()).arg("status").output().unwrap();
+    let output = bin()
+        .current_dir(temp.path())
+        .arg("status")
+        .output()
+        .unwrap();
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(stdout.contains("Brief: ✓"), "{}", stdout);

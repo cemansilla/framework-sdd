@@ -46,7 +46,10 @@ pub async fn execute(path: Option<PathBuf>) -> Result<()> {
         if !file.exists() {
             println!("  ✗ {}: missing {:?}", name, file);
             errors += 1;
-        } else if std::fs::metadata(file).map(|m| m.len() == 0).unwrap_or(true) {
+        } else if std::fs::metadata(file)
+            .map(|m| m.len() == 0)
+            .unwrap_or(true)
+        {
             println!("  ✗ {}: empty {:?}", name, file);
             errors += 1;
         } else {
@@ -55,7 +58,10 @@ pub async fn execute(path: Option<PathBuf>) -> Result<()> {
     }
 
     // Optional-but-expected content: requirements and tasks.
-    for (name, dir) in [("requirements", &layout.requirements), ("tasks", &layout.tasks)] {
+    for (name, dir) in [
+        ("requirements", &layout.requirements),
+        ("tasks", &layout.tasks),
+    ] {
         match count_markdown_files(dir) {
             0 => {
                 println!("  ! {}: no markdown files yet in {:?}", name, dir);
@@ -65,7 +71,10 @@ pub async fn execute(path: Option<PathBuf>) -> Result<()> {
         }
     }
 
-    println!("\n✓ Validation complete: {} error(s), {} warning(s)", errors, warnings);
+    println!(
+        "\n✓ Validation complete: {} error(s), {} warning(s)",
+        errors, warnings
+    );
 
     if errors > 0 {
         anyhow::bail!("validation failed with {} error(s)", errors);

@@ -332,12 +332,12 @@ Determinar qué gates deben repetirse.
 
 ## Fase 15 — Framework self-hosting
 
-### TASK-FW-200 — Develop a feature using SDD
-### TASK-FW-201 — Develop a change using SDD
-### TASK-FW-202 — Develop a fix from a failed test
-### TASK-FW-203 — Verify documentation synchronization
-### TASK-FW-204 — Verify changelog
-### TASK-FW-205 — Verify reproducibility
+### TASK-FW-200 — Develop a feature using SDD [x]
+### TASK-FW-201 — Develop a change using SDD [x]
+### TASK-FW-202 — Develop a fix from a failed test [x]
+### TASK-FW-203 — Verify documentation synchronization [x]
+### TASK-FW-204 — Verify changelog [x]
+### TASK-FW-205 — Verify reproducibility [x]
 
 ## Fase 16 — Documentation and release
 

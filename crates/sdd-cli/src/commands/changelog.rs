@@ -66,9 +66,8 @@ mod tests {
 
     #[test]
     fn test_render_entries() {
-        let entries = parse_changelog(
-            "## [CHG-001] 2026-09-26 — Traceable entries\n\n- **Impacto**: CLI\n",
-        );
+        let entries =
+            parse_changelog("## [CHG-001] 2026-09-26 — Traceable entries\n\n- **Impacto**: CLI\n");
         let output = render(&entries);
         assert!(output.contains("1 entries recorded"));
         assert!(output.contains("[CHG-001] 2026-09-26 — Traceable entries"));

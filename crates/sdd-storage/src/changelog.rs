@@ -107,7 +107,11 @@ fn extract_date(s: &str) -> Option<(&str, &str)> {
     let (head, tail) = s.split_at(10);
     let bytes = head.as_bytes();
     let is_digits = |range: std::ops::Range<usize>| bytes[range].iter().all(u8::is_ascii_digit);
-    if bytes[4] == b'-' && bytes[7] == b'-' && is_digits(0..4) && is_digits(5..7) && is_digits(8..10)
+    if bytes[4] == b'-'
+        && bytes[7] == b'-'
+        && is_digits(0..4)
+        && is_digits(5..7)
+        && is_digits(8..10)
     {
         Some((head, tail))
     } else {
@@ -183,7 +187,8 @@ mod tests {
 
     #[test]
     fn test_malformed_lines_are_ignored() {
-        let markdown = "## [CHG-002] 2026-09-26 — Title\n\n- plain bullet\n- **no terminator\nnot a field\n";
+        let markdown =
+            "## [CHG-002] 2026-09-26 — Title\n\n- plain bullet\n- **no terminator\nnot a field\n";
         let entries = parse_changelog(markdown);
         assert_eq!(entries.len(), 1);
         assert!(entries[0].fields.is_empty());
@@ -199,7 +204,8 @@ mod tests {
 
     #[test]
     fn test_nested_entry_under_unreleased() {
-        let markdown = "## [Unreleased]\n\n### [CHG-001] 2026-09-26 — Nested entry\n\n- **Origen**: change\n";
+        let markdown =
+            "## [Unreleased]\n\n### [CHG-001] 2026-09-26 — Nested entry\n\n- **Origen**: change\n";
         let entries = parse_changelog(markdown);
         assert_eq!(entries.len(), 1);
         assert_eq!(entries[0].id, "CHG-001");

@@ -29,10 +29,7 @@ pub async fn execute(path: Option<PathBuf>) -> Result<()> {
         "  Brief: {}",
         check_mark(&layout.brief.join("brief.md"), false)
     );
-    println!(
-        "  Requirements: {}",
-        check_mark(&layout.requirements, true)
-    );
+    println!("  Requirements: {}", check_mark(&layout.requirements, true));
     println!(
         "  Architecture: {}",
         check_mark(&layout.architecture.join("architecture.md"), false)
@@ -48,9 +45,16 @@ fn check_mark(path: &Path, with_content: bool) -> &'static str {
     let ok = if with_content {
         path.is_dir() && count_markdown_files(path) > 0
     } else {
-        path.is_file() && std::fs::metadata(path).map(|m| m.len() > 0).unwrap_or(false)
+        path.is_file()
+            && std::fs::metadata(path)
+                .map(|m| m.len() > 0)
+                .unwrap_or(false)
     };
-    if ok { "✓" } else { "✗" }
+    if ok {
+        "✓"
+    } else {
+        "✗"
+    }
 }
 
 fn count_markdown_files(dir: &Path) -> usize {

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [TASK-FW-200..205] 2026-09-26 — Fase 15 — Framework self-hosting
+
+- **Motivo**: Ejecutar el flujo SDD sobre el propio framework: una feature (changelog lee el disco), un cambio (CHG-001), un fix desde test fallido, sincronización de documentación, verificación de changelog y de reproducibilidad.
+- **Origen**: feature
+- **Artefactos afectados**: .sdd/ (specs del proyecto), crates/sdd-storage (parser de changelog, initialize idempotente), crates/sdd-cli (comandos changelog/validate/status/init/architecture, binario `sdd`), crates/sdd-cli/tests/cli.rs, README.md, Cargo.toml, poc/logistics-gateway/Cargo.toml
+- **Impacto**: CLI confiable (validate falla de verdad ante artefactos faltantes, status mide contenido real, init ya no destruye artefactos), nombre de binario unificado, 16 entradas de changelog con trazabilidad completa, specs SDD viviendo en `.sdd/`
+- **Tareas afectadas**: TASK-FW-200..205
+
 ### [CHG-002] 2026-09-26 — Fase 13 restaurada en develop
 
 - **Motivo**: El PR #14 (suite de calidad) se fusionó accidentalmente en `main` en lugar de `develop`; el crate `tests/` nunca llegó a develop.
