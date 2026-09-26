@@ -7,7 +7,7 @@ Este paquete contiene la documentación base para desarrollar el framework SDD (
 - `.docs/01-brief.md` — Visión, problema, propuesta de valor, alcance y principios.
 - `.docs/02-technical-specification.md` — Arquitectura general, lifecycle del framework, integración de herramientas y calidad.
 - `.docs/03-development-tasks.md` — Plan de implementación completo y ordenado por fases.
-- `agents.md` — Definición de los agentes de IA, asignación de modelos por tarea y ciclo de orquestación.
+- `AGENTS.md` — Definición de los agentes de IA, asignación de modelos por tarea y ciclo de orquestación.
 
 ## 🚚 Proyecto PoC (Shipping Logistics Gateway)
 

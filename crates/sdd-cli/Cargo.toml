@@ -5,6 +5,10 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 
+[[bin]]
+name = "sdd"
+path = "src/main.rs"
+
 [dependencies]
 sdd-core = { path = "../sdd-core" }
 sdd-storage = { path = "../sdd-storage" }
@@ -17,3 +21,6 @@ tokio.workspace = true
 anyhow.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+
+[dev-dependencies]
+tempfile = "3"

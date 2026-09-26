@@ -1812,6 +1812,7 @@ dependencies = [
  "sdd-mcp",
  "sdd-parser",
  "sdd-storage",
+ "tempfile",
  "tokio",
  "tracing",
  "tracing-subscriber",

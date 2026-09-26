@@ -22,6 +22,11 @@ impl FilesystemAdapter {
         SddStructure::new(&self.base_path)
     }
 
+    /// Create the `.sdd/` structure with template artifacts.
+    ///
+    /// Existing files (templates and manifest) are never overwritten, so
+    /// running `initialize` on a populated project is idempotent and never
+    /// destroys user content.
     pub async fn initialize(&self, project_id: &str) -> Result<Manifest, StorageError> {
         let structure = self.structure();
 
@@ -30,13 +35,12 @@ impl FilesystemAdapter {
         }
 
         for (relative_path, content) in default_templates() {
+            let full_path = structure.sdd_dir().join(&relative_path);
             if content.is_empty() {
-                let full_path = structure.sdd_dir().join(&relative_path);
                 fs::create_dir_all(&full_path)
                     .await
                     .map_err(StorageError::Io)?;
-            } else {
-                let full_path = structure.sdd_dir().join(&relative_path);
+            } else if !full_path.exists() {
                 if let Some(parent) = full_path.parent() {
                     fs::create_dir_all(parent).await.map_err(StorageError::Io)?;
                 }
@@ -46,10 +50,20 @@ impl FilesystemAdapter {
             }
         }
 
+        let manifest_path = structure.layout().manifest;
+        if manifest_path.exists() {
+            let content = fs::read_to_string(&manifest_path)
+                .await
+                .map_err(StorageError::Io)?;
+            return serde_json::from_str(&content).map_err(|e| {
+                StorageError::Serialization(format!("existing manifest is invalid: {e}"))
+            });
+        }
+
         let manifest = Manifest::new(project_id);
         let manifest_json = serde_json::to_string_pretty(&manifest)
             .map_err(|e| StorageError::Serialization(e.to_string()))?;
-        fs::write(&structure.layout().manifest, manifest_json)
+        fs::write(&manifest_path, manifest_json)
             .await
             .map_err(StorageError::Io)?;
 
@@ -185,6 +199,104 @@ mod tests {
         let structure = adapter.structure();
         assert!(structure.sdd_dir().exists());
         assert!(structure.layout().manifest.exists());
+    }
+
+    /// TASK-FW-205: two fresh initializations with the same project_id must
+    /// produce identical structure and template content; the manifest may
+    /// differ only in its timestamps.
+    #[tokio::test]
+    async fn test_initialize_is_reproducible() {
+        let dir_a = TempDir::new().unwrap();
+        let dir_b = TempDir::new().unwrap();
+
+        FilesystemAdapter::new(dir_a.path())
+            .initialize("same-project")
+            .await
+            .unwrap();
+        FilesystemAdapter::new(dir_b.path())
+            .initialize("same-project")
+            .await
+            .unwrap();
+
+        let entries_a = collect_entries(&dir_a.path().join(".sdd")).unwrap();
+        let entries_b = collect_entries(&dir_b.path().join(".sdd")).unwrap();
+        assert_eq!(entries_a, entries_b, "file/dir structure must match");
+
+        for (relative, is_dir) in &entries_a {
+            if *is_dir {
+                continue;
+            }
+            let content_a = std::fs::read(dir_a.path().join(".sdd").join(relative)).unwrap();
+            let content_b = std::fs::read(dir_b.path().join(".sdd").join(relative)).unwrap();
+
+            if relative == Path::new("manifest.json") {
+                let normalize = |bytes: &[u8]| {
+                    let mut value: serde_json::Value = serde_json::from_slice(bytes).unwrap();
+                    value["created_at"] = serde_json::Value::Null;
+                    value["updated_at"] = serde_json::Value::Null;
+                    value.to_string()
+                };
+                assert_eq!(normalize(&content_a), normalize(&content_b));
+            } else {
+                assert_eq!(
+                    content_a, content_b,
+                    "content must match for {:?}",
+                    relative
+                );
+            }
+        }
+    }
+
+    /// TASK-FW-205: re-running initialize on a populated project must not
+    /// overwrite user artifacts or regenerate the manifest.
+    #[tokio::test]
+    async fn test_initialize_is_idempotent() {
+        let temp = TempDir::new().unwrap();
+        let adapter = FilesystemAdapter::new(temp.path());
+
+        let first = adapter.initialize("keep-me").await.unwrap();
+        let structure = adapter.structure();
+
+        // Simulate user content.
+        let brief = structure.layout().brief.join("brief.md");
+        tokio::fs::write(&brief, "# My custom brief\n")
+            .await
+            .unwrap();
+
+        let second = adapter.initialize("different-id").await.unwrap();
+
+        let brief_after = tokio::fs::read_to_string(&brief).await.unwrap();
+        assert_eq!(brief_after, "# My custom brief\n");
+        assert_eq!(second.project_id, "keep-me");
+        assert_eq!(first.project_id, second.project_id);
+
+        let manifest_after = adapter.load_manifest().await.unwrap();
+        assert_eq!(manifest_after.project_id, "keep-me");
+    }
+
+    fn collect_entries(root: &std::path::Path) -> std::io::Result<Vec<(std::path::PathBuf, bool)>> {
+        fn walk(
+            dir: &std::path::Path,
+            root: &std::path::Path,
+            out: &mut Vec<(std::path::PathBuf, bool)>,
+        ) -> std::io::Result<()> {
+            for entry in std::fs::read_dir(dir)? {
+                let path = entry?.path();
+                let relative = path.strip_prefix(root).unwrap().to_path_buf();
+                if path.is_dir() {
+                    out.push((relative.clone(), true));
+                    walk(&path, root, out)?;
+                } else {
+                    out.push((relative, false));
+                }
+            }
+            Ok(())
+        }
+
+        let mut entries = Vec::new();
+        walk(root, root, &mut entries)?;
+        entries.sort();
+        Ok(entries)
     }
 
     #[tokio::test]
