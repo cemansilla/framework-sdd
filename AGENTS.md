@@ -6,14 +6,39 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 ## Matriz de Agentes
 
-| Agente | Sub-comando | Modelo | Mode | Rol Principal |
-| :--- | :--- | :--- | :--- | :--- |
-| **Orquestador** | `/orchestrate` | `qwen3.7-plus` | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
-| **Arquitecto** | `/plan` | `kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
-| **Planificador** | `/tasks` | `qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
-| **Desarrollador** | `/implement` | `kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
-| **QA / Tester** | `/test` | `deepseek-v4.1-flash` | `subagent` | Generación y ejecución de pruebas unitarias e integración. |
-| **Revisor** | `/review` | `glm-5.3-flash` | `subagent` | Auditoría de seguridad, calidad y adherencia a la especificación. |
+| Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual vía `/models`) | Mode | Rol Principal |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Orquestador** | `/orchestrate` | `opencode/longcat-2.5-preview-free` (cabeza de su cadena; ver fallback abajo) | cadena `inherit` → global | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
+| **Arquitecto** | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
+| **Planificador** | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
+| **Desarrollador** | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
+| **QA / Tester** | `/test` | `opencode/nemotron-3.5-lightning-free` | `opencode-go/deepseek-v4.1-flash` | `subagent` | Generación y ejecución de pruebas unitarias e integración. |
+| **Revisor** | `/review` | `opencode/muse-spark-1.3-contributor-free` | `opencode-go/glm-5.3-flash` | `subagent` | Auditoría de seguridad, calidad y adherencia a la especificación. |
+
+**Notas de modelos:**
+
+- **Fallback de modelos por pasos** (agnóstico al proveedor): cada rol tiene
+  su cadena ordenada en `.sdd/config/models.json`, terminada en `inherit`
+  (quita el pin y sigue el modelo global activo del host). Ante un fallo de
+  modelo: `sdd model health --role <rol>` lo detecta, `sdd model fallback
+  --role <rol>` prueba la cadena y fija el primero sano, `/model-fallback`
+  es el atajo. Solo toca `.opencode/agents/<rol>.md` y
+  `.sdd/config/model-health.json`: tareas, código y git quedan intactos para
+  reanudar. Si todo falla: exit ≠ 0 con cada error, nada se escribe.
+- Los **subagentes conservan su modelo fijado por rol** (tabla de arriba =
+  cabeza de su cadena). El pin de cada agente y la cabeza de su cadena son
+  un solo contrato (test `test_agent_pins_match_chain_heads`).
+- **Fallos nunca silenciosos**: ante un error de modelo o proveedor, el
+  orquestador debe informarlo en voz alta (modelo + error + siguiente modelo
+  sugerido). Nunca inventar resultados ni degradar el flujo en silencio.
+- Los modelos de pago (`opencode-go/*`, `openai/*`) **siguen disponibles**
+  para selección manual con `/models`; nada está deshabilitado.
+- `small_model` (`opencode/mimo-v2.6-flash-free`) cubre títulos, resúmenes y
+  compactación para no consumir cuota de pago.
+- El sufijo `-free` **no prueba gratuidad**: `deepseek-v4.1-flash` y
+  `muse-spark-1.3` son de pago sin sufijo; `big-pickle` es gratis sin
+  sufijo. La fuente de verdad es el costo en `opencode models -v` o
+  models.dev. Detalle y alternativas: [`docs/agent-authoring.md`](docs/agent-authoring.md).
 
 ---
 
@@ -86,6 +111,23 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 - El agente NO elimina branches remotas.
 - El agente termina su trabajo en el paso 5 (push + PR creado).
 - La revisión, aprobación y merge son responsabilidad exclusiva del usuario.
+
+---
+
+## Regla Crítica: `bash: "*": ask` en Todos los Agentes
+
+Ningún agente debe terminar su bloque `bash` con `"*": deny`. **Usar `"*": ask`.**
+
+Los modelos gratuitos de OpenCode Zen rechazan la sesión con
+`AI_APICallError: OpenCode's free tier can only be used from within OpenCode`
+cuando el agente tiene permisos restrictivos de `bash`. El síntoma es que el
+mismo modelo funciona en `build`/`plan` (built-in) y falla en los agentes
+custom del harness — **no es un problema de modelo**.
+
+Upstream: [#50627](https://github.com/anomalyco/opencode/issues/50627),
+[#53347](https://github.com/anomalyco/opencode/issues/53347),
+[#49680](https://github.com/anomalyco/opencode/issues/49680).
+Detalle en [`docs/agent-authoring.md`](docs/agent-authoring.md#permisos-y-free-tier-de-opencode-zen--deny-rompe-el-free-tier).
 
 ---
 

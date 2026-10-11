@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-
 #[derive(Debug, Clone)]
 pub struct SddStructure {
     pub root: PathBuf,
@@ -117,6 +116,7 @@ pub fn default_templates() -> Vec<(PathBuf, &'static str)> {
         (PathBuf::from("architecture/adr/"), ""),
         (PathBuf::from("changes/CHANGELOG.md"), CHANGELOG_TEMPLATE),
         (PathBuf::from("config/project.md"), PROJECT_TEMPLATE),
+        (PathBuf::from("config/models.json"), MODELS_TEMPLATE),
     ]
 }
 
@@ -175,6 +175,59 @@ const PROJECT_TEMPLATE: &str = r#"# Project Configuration
 ## Description
 "#;
 
+/// Parse the bundled default model chain config (the `config/models.json`
+/// template installed by `sdd init`). Single source of truth for the default
+/// chains; panics only if the shipped template is corrupt (guarded by test).
+pub fn default_model_chain_config() -> sdd_core::model_chain::ModelChainConfig {
+    serde_json::from_str(MODELS_TEMPLATE).expect("bundled models.json template is invalid")
+}
+const MODELS_TEMPLATE: &str = r#"{
+  "providers": {
+    "opencode": {
+      "api_base": "https://opencode.ai/zen/v1",
+      "request_style": "openai-chat-completions",
+      "auth": [
+        {"env": "OPENCODE_ZEN_API_KEY"},
+        {"file": "~/.local/share/opencode/auth.json", "token_path": "openai.access"}
+      ]
+    }
+  },
+  "roles": {
+    "orchestrator": [
+      "opencode/longcat-2.5-preview-free",
+      "opencode/space-bunny-free",
+      "opencode/nemotron-3-ultra-free",
+      "inherit"
+    ],
+    "architect": [
+      "opencode/nemotron-3-ultra-free",
+      "opencode/space-bunny-free",
+      "inherit"
+    ],
+    "planner": [
+      "opencode/ling-3.0-flash-fin-free",
+      "opencode/space-bunny-free",
+      "inherit"
+    ],
+    "coder": [
+      "opencode/big-pickle",
+      "opencode/space-bunny-free",
+      "inherit"
+    ],
+    "tester": [
+      "opencode/nemotron-3.5-lightning-free",
+      "opencode/space-bunny-free",
+      "inherit"
+    ],
+    "reviewer": [
+      "opencode/muse-spark-1.3-contributor-free",
+      "opencode/space-bunny-free",
+      "inherit"
+    ]
+  }
+}
+"#;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -216,5 +269,33 @@ mod tests {
     fn test_default_templates() {
         let templates = default_templates();
         assert!(!templates.is_empty());
+    }
+
+    #[test]
+    fn test_default_model_chain_config_is_valid() {
+        use sdd_core::model_chain::{chain_for, ChainEntry, INHERIT_ENTRY};
+        let config = default_model_chain_config();
+        assert_eq!(config.roles.len(), 6);
+        assert!(config.providers.contains_key("opencode"));
+        for role in [
+            "orchestrator",
+            "architect",
+            "planner",
+            "coder",
+            "tester",
+            "reviewer",
+        ] {
+            let chain = chain_for(&config, role).unwrap();
+            assert!(
+                chain.len() >= 2,
+                "role {role} needs a fallback, not a single model"
+            );
+            assert!(
+                matches!(chain.last(), Some(ChainEntry::Inherit)),
+                "role {role} chain must end with '{INHERIT_ENTRY}'"
+            );
+        }
+        let head = chain_for(&config, "orchestrator").unwrap();
+        assert!(matches!(head[0], ChainEntry::Pinned(_)));
     }
 }

@@ -1,4 +1,5 @@
 use crate::manifest::Manifest;
+use crate::project_templates;
 use crate::storage_port::{StorageError, StoragePort};
 use crate::structure::{default_templates, SddStructure};
 use async_trait::async_trait;
@@ -70,6 +71,41 @@ impl FilesystemAdapter {
         Ok(manifest)
     }
 
+    /// Install project-level files (AGENTS.md, .gitignore, .opencode/).
+    ///
+    /// Existing files are never overwritten, so running this on a populated
+    /// project is idempotent and never destroys user content.
+    pub async fn install_project_files(&self) -> Result<(), StorageError> {
+        for (relative_path, content) in project_templates::project_templates() {
+            let full_path = self.base_path.join(&relative_path);
+            if !full_path.exists() {
+                if let Some(parent) = full_path.parent() {
+                    fs::create_dir_all(parent).await.map_err(StorageError::Io)?;
+                }
+                fs::write(&full_path, content)
+                    .await
+                    .map_err(StorageError::Io)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Overwrite project-level files with the current templates.
+    ///
+    /// Unlike [`Self::install_project_files`] this replaces AGENTS.md,
+    /// .gitignore and .opencode/ unconditionally, refreshing them after a
+    /// framework upgrade. User artifacts under `.sdd/` are never touched.
+    pub async fn update_project_files(&self) -> Result<(), StorageError> {
+        for (relative_path, content) in project_templates::project_templates() {
+            let full_path = self.base_path.join(&relative_path);
+            if let Some(parent) = full_path.parent() {
+                fs::create_dir_all(parent).await.map_err(StorageError::Io)?;
+            }
+            self.atomic_write(&full_path, content.as_bytes()).await?;
+        }
+        Ok(())
+    }
+
     pub async fn load_manifest(&self) -> Result<Manifest, StorageError> {
         let structure = self.structure();
         let manifest_path = &structure.layout().manifest;
@@ -96,7 +132,7 @@ impl FilesystemAdapter {
             .await
     }
 
-    async fn atomic_write(&self, path: &Path, data: &[u8]) -> Result<(), StorageError> {
+    pub(crate) async fn atomic_write(&self, path: &Path, data: &[u8]) -> Result<(), StorageError> {
         let temp_path = path.with_extension("tmp");
 
         if let Some(parent) = path.parent() {
@@ -297,6 +333,99 @@ mod tests {
         walk(root, root, &mut entries)?;
         entries.sort();
         Ok(entries)
+    }
+
+    #[tokio::test]
+    async fn test_install_project_files() {
+        let temp = TempDir::new().unwrap();
+        let adapter = FilesystemAdapter::new(temp.path());
+
+        adapter.initialize("test-project").await.unwrap();
+        adapter.install_project_files().await.unwrap();
+
+        assert!(temp.path().join("AGENTS.md").exists());
+        assert!(temp.path().join(".gitignore").exists());
+        assert!(temp
+            .path()
+            .join(".opencode/agents/orchestrator.md")
+            .exists());
+        assert!(temp
+            .path()
+            .join(".opencode/skills/branching-sdd/SKILL.md")
+            .exists());
+        assert!(temp.path().join(".opencode/commands/plan.md").exists());
+    }
+
+    /// Re-running install must never clobber edits the user made to the
+    /// installed project files.
+    #[tokio::test]
+    async fn test_install_project_files_is_idempotent() {
+        let temp = TempDir::new().unwrap();
+        let adapter = FilesystemAdapter::new(temp.path());
+
+        adapter.initialize("test-project").await.unwrap();
+        adapter.install_project_files().await.unwrap();
+
+        let agents = temp.path().join("AGENTS.md");
+        tokio::fs::write(&agents, "# Mine\n").await.unwrap();
+
+        adapter.install_project_files().await.unwrap();
+
+        assert_eq!(
+            tokio::fs::read_to_string(&agents).await.unwrap(),
+            "# Mine\n"
+        );
+    }
+
+    /// `--update` must refresh project files that drifted from the templates,
+    /// including files the user never edited.
+    #[tokio::test]
+    async fn test_update_project_files_restores_templates() {
+        let temp = TempDir::new().unwrap();
+        let adapter = FilesystemAdapter::new(temp.path());
+
+        adapter.initialize("test-project").await.unwrap();
+        adapter.install_project_files().await.unwrap();
+
+        let agents = temp.path().join("AGENTS.md");
+        let skill = temp.path().join(".opencode/skills/rust-quality/SKILL.md");
+        tokio::fs::write(&agents, "# Mine\n").await.unwrap();
+        tokio::fs::write(&skill, "# Stale skill\n").await.unwrap();
+
+        adapter.update_project_files().await.unwrap();
+
+        let agents_after = tokio::fs::read_to_string(&agents).await.unwrap();
+        let skill_after = tokio::fs::read_to_string(&skill).await.unwrap();
+        assert!(agents_after.contains("SDD AI Harness"));
+        assert_eq!(
+            skill_after,
+            project_templates::project_templates()
+                .into_iter()
+                .find(|(path, _)| path.ends_with("rust-quality/SKILL.md"))
+                .map(|(_, content)| content.to_string())
+                .unwrap()
+        );
+    }
+
+    /// `--update` refreshes project files but must never touch `.sdd/`.
+    #[tokio::test]
+    async fn test_update_project_files_preserves_sdd_artifacts() {
+        let temp = TempDir::new().unwrap();
+        let adapter = FilesystemAdapter::new(temp.path());
+
+        adapter.initialize("keep-me").await.unwrap();
+        adapter.install_project_files().await.unwrap();
+
+        let brief = adapter.structure().layout().brief.join("brief.md");
+        tokio::fs::write(&brief, "# My brief\n").await.unwrap();
+
+        adapter.update_project_files().await.unwrap();
+
+        assert_eq!(
+            tokio::fs::read_to_string(&brief).await.unwrap(),
+            "# My brief\n"
+        );
+        assert_eq!(adapter.load_manifest().await.unwrap().project_id, "keep-me");
     }
 
     #[tokio::test]

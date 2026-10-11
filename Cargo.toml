@@ -13,7 +13,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 rust-version = "1.80"
 license = "MIT"
@@ -33,3 +33,4 @@ uuid = { version = "1", features = ["v4", "serde"] }
 async-trait = "0.1"
 sha2 = "0.10"
 tempfile = "3"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }

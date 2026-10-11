@@ -1,7 +1,7 @@
 ---
 name: coder
 description: Escritura, modificación y refactorización de código fuente Rust.
-model: opencode-go/kimi-k2.7-code
+model: opencode/big-pickle
 temperature: 0.1
 mode: subagent
 permission:
@@ -27,7 +27,7 @@ permission:
     cargo check *: allow
     git status: allow
     git diff *: allow
-    "*": deny
+    "*": ask
   task: deny
   todowrite: allow
 ---

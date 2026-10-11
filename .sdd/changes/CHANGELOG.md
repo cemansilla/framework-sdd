@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.2.0] — 2026-10-11
+
+### [CHG-003] 2026-10-11 — Sistema de fallback de modelos del framework (agnóstico al proveedor)
+
+- **Motivo**: OpenCode no soporta fallback automático de modelos por agente: un modelo con rate limit dejaba el flujo muerto sin alternativa gestionada por el harness. El workaround previo (orquestador sin pin) resolvía solo el caso del default global.
+- **Origen**: feature — resiliencia del harness ante fallos de modelo
+- **Artefactos afectados**: crates/sdd-core (módulo `model_chain`: esquema de cadenas/providers/salud + parsing y validación puros), crates/sdd-storage (persistencia de `config/models.json` y `config/model-health.json`, edición atómica del `model:` en frontmatter, plantilla `config/models.json`), crates/sdd-cli (subcomando `sdd model status|health|fallback|report`, probe HTTP genérico openai/anthropic con credenciales por env o archivo, nunca literales), .opencode/agents/orchestrator.md (pin = cabeza de cadena + health check al arrancar + auto-fallback), .opencode/commands/model-fallback.md, AGENTS.md, docs/agent-authoring.md (§4.2), docs/user-guide.md, docs/cli-reference.md
+- **Impacto**: cada rol tiene su cadena ordenada terminada en `inherit`; `sdd model fallback --role <rol>` prueba y fija el primer modelo sano (write-back por rol, atómico); si todo falla exit ≠ 0 sin escribir nada. El fallback no toca tareas, código ni git: lo avanzado se reanuda con `sdd status`. Fallos siempre en voz alta, nunca silenciosos. Pin de cada agente = cabeza de su cadena (test `test_agent_pins_match_chain_heads`).
+- **Tareas afectadas**: TASK-FW-230
+
+### [CHG-002] 2026-10-11 — Orquestador sin modelo fijado + cadena de preferencia ante rate limits
+
+- **Motivo**: OpenCode no soporta fallback automático de modelos por agente. El orquestador tenía `model:` fijado a un free tier que al agotarse (rate limit, 6h de espera) dejaba el flujo muerto sin alternativa, y `bash: "*": deny` en los agentes custom disparaba además `AI_APICallError: OpenCode's free tier can only be used from within OpenCode` con el mismo modelo que `build`/`plan` usan sin problema (bugs upstream opencode#50627, #53347, #49680).
+- **Origen**: fix — compatibilidad del harness con free tier y rate limits
+- **Artefactos afectados**: .opencode/agents/*.md (orquestador sin pin + sección "Política de modelo"; `deny`→`ask` en coder/orchestrator/tester/reviewer), AGENTS.md (matriz + notas), docs/agent-authoring.md (§4.2), plantillas en crates/sdd-storage/templates/ (replican todo lo anterior)
+- **Impacto**: el orquestador hereda siempre el modelo global activo (agnóstico al proveedor); ante un fallo de modelo informa en voz alta modelo + error + siguiente sugerido de la cadena (global → space-bunny-free → nemotron-3-ultra-free → modelo fuerte del proveedor pago) y nunca degrada en silencio. Los subagentes conservan pin por rol; `/models` mueve solo al orquestador. Los proyectos existentes adoptan el cambio con `sdd init --update`.
+- **Tareas afectadas**: TASK-FW-230
+
+### [CHG-001] 2026-10-11 — `sdd init` instala los archivos de proyecto del harness
+
+- **Motivo**: `sdd init` solo creaba `.sdd/`. Un proyecto externo instalado con el binario quedaba sin agentes, comandos, skills ni `AGENTS.md`, es decir sin harness, por lo que el framework no era utilizable fuera de su propio repositorio. Tampoco existía forma de adoptar mejoras del harness al actualizar el framework.
+- **Origen**: feature
+- **Artefactos afectados**: crates/sdd-storage (módulo `project_templates`, plantillas embebidas con `include_str!`, `install_project_files`, `update_project_files`), crates/sdd-cli (`init --update`), README.md, docs/user-guide.md
+- **Impacto**: `sdd init` instala ahora `AGENTS.md`, `.opencode/{agents,commands,skills}/` y `.gitignore` además de `.sdd/`, de forma idempotente (no pisa archivos existentes). `sdd init --update` refresca esos archivos tras `cargo install --force`, sin tocar los artefactos del usuario en `.sdd/`. El framework se distribuye como binario (`cargo install --git https://github.com/cemansilla/framework-sdd sdd-cli`) y los proyectos externos no dependen de él en su `Cargo.toml`.
+- **Tareas afectadas**: TASK-FW-230
+
+### [TASK-FW-220] 2026-09-26 — Defaults a modelos gratuitos (OpenCode Zen)
+
+- **Motivo**: Se agotó la cuota del plan pago `opencode-go`; los agentes y los defaults globales deben correr con modelos gratuitos ($0/Mtok) sin perder acceso a los de pago.
+- **Origen**: change — cambio de configuración de modelos
+- **Artefactos afectados**: .opencode/agents/*.md (6 agentes), opencode.json, AGENTS.md, docs/agent-authoring.md, docs/user-guide.md
+- **Impacto**: orchestrator=longcat-2.5-preview-free, architect=nemotron-3-ultra-free, planner=ling-3.0-flash-fin-free, coder=big-pickle, tester=nemotron-3.5-lightning-free, reviewer=muse-spark-1.3-contributor-free; `model`=longcat y `small_model`=mimo-v2.6-flash-free (títulos/resúmenes/compactación sin cuota); `opencode-go/*` intacto para selección manual con `/models`; matriz rol→modelo (gratis vs pago) documentada en AGENTS.md y docs/agent-authoring.md
+- **Tareas afectadas**: TASK-FW-220
+
 ## [v0.1.0] — 2026-09-26
 
 ### [TASK-FW-210..219] 2026-09-26 — Fase 16 — Documentación y release

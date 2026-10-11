@@ -1,7 +1,7 @@
 ---
 name: architect
 description: Diseñador de arquitectura de software, contratos de API y modelos de datos.
-model: opencode-go/kimi-k3
+model: opencode/nemotron-3-ultra-free
 temperature: 0.2
 mode: subagent
 permission:

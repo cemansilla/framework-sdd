@@ -1,4 +1,5 @@
 mod commands;
+mod model;
 
 use clap::Parser;
 use std::path::PathBuf;
@@ -19,6 +20,10 @@ enum Commands {
         /// Project path (defaults to current directory)
         #[arg(short, long)]
         path: Option<PathBuf>,
+        /// Refresh project files (AGENTS.md, .opencode/, .gitignore) to the
+        /// current framework templates
+        #[arg(long)]
+        update: bool,
     },
     /// Show project status
     Status {
@@ -163,6 +168,14 @@ enum Commands {
         #[arg(short, long)]
         install: bool,
     },
+    /// Manage the provider-agnostic model fallback chain
+    Model {
+        /// Project path (defaults to current directory)
+        #[arg(short, long)]
+        path: Option<PathBuf>,
+        #[command(subcommand)]
+        action: model::ModelAction,
+    },
 }
 
 #[tokio::main]
@@ -177,8 +190,8 @@ async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Init { path }) => {
-            commands::init::execute(path).await?;
+        Some(Commands::Init { path, update }) => {
+            commands::init::execute(path, update).await?;
         }
         Some(Commands::Status { path }) => {
             commands::status::execute(path).await?;
@@ -236,6 +249,9 @@ async fn main() -> anyhow::Result<()> {
         }) => {
             commands::hooks::execute(path, list, install).await?;
         }
+        Some(Commands::Model { path, action }) => {
+            model::execute(path, action).await?;
+        }
         None => {
             println!("SDD AI Development Harness");
             println!("==========================");
@@ -258,6 +274,7 @@ async fn main() -> anyhow::Result<()> {
             println!("  validate      Validate the project");
             println!("  changelog     Show project changelog");
             println!("  hooks         Manage project hooks");
+            println!("  model         Manage the model fallback chain");
             println!("\nRun 'sdd <command> --help' for more information on a command.");
         }
     }
