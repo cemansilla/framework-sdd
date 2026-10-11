@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.2.0] — 2026-10-11
+
 ### [CHG-003] 2026-10-11 — Sistema de fallback de modelos del framework (agnóstico al proveedor)
 
 - **Motivo**: OpenCode no soporta fallback automático de modelos por agente: un modelo con rate limit dejaba el flujo muerto sin alternativa gestionada por el harness. El workaround previo (orquestador sin pin) resolvía solo el caso del default global.
