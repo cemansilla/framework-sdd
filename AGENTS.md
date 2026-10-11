@@ -8,7 +8,7 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 | Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual vía `/models`) | Mode | Rol Principal |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Orquestador** | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
+| **Orquestador** | `/orchestrate` | sin pin — hereda el modelo global activo | ver cadena de preferencia abajo | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
 | **Arquitecto** | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
 | **Planificador** | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
 | **Desarrollador** | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
@@ -17,8 +17,20 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 **Notas de modelos:**
 
-- Todos los defaults son **gratuitos** (`$0/Mtok` en OpenCode Zen) y viven en
-  `.opencode/agents/*.md` + `opencode.json` (`model`, `small_model`).
+- El **orquestador no fija modelo**: hereda el modelo global activo de
+  OpenCode (`opencode.json` → `/models` → flag `--model`). Así sigue
+  automáticamente al proveedor que el usuario tenga activo. Cadena de
+  preferencia ante fallos (rate limit, cuota): 1) reintentar el global tras
+  la ventana del error; 2) en Zen free: `opencode/space-bunny-free`, luego
+  `opencode/nemotron-3-ultra-free`; 3) en proveedor pago: su modelo fuerte.
+  Detalle en el propio agente (`.opencode/agents/orchestrator.md`, sección
+  "Política de modelo").
+- Los **subagentes conservan su modelo fijado por rol** (tabla de arriba);
+  `/models` mueve solo al orquestador. Si un subagente falla por rate limit,
+  aplica la misma cadena editando su frontmatter.
+- **Fallos nunca silenciosos**: ante un error de modelo o proveedor, el
+  orquestador debe informarlo en voz alta (modelo + error + siguiente modelo
+  sugerido). Nunca inventar resultados ni degradar el flujo en silencio.
 - Los modelos de pago (`opencode-go/*`, `openai/*`) **siguen disponibles**
   para selección manual con `/models`; nada está deshabilitado.
 - `small_model` (`opencode/mimo-v2.6-flash-free`) cubre títulos, resúmenes y

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [CHG-002] 2026-10-11 — Orquestador sin modelo fijado + cadena de preferencia ante rate limits
+
+- **Motivo**: OpenCode no soporta fallback automático de modelos por agente. El orquestador tenía `model:` fijado a un free tier que al agotarse (rate limit, 6h de espera) dejaba el flujo muerto sin alternativa, y `bash: "*": deny` en los agentes custom disparaba además `AI_APICallError: OpenCode's free tier can only be used from within OpenCode` con el mismo modelo que `build`/`plan` usan sin problema (bugs upstream opencode#50627, #53347, #49680).
+- **Origen**: fix — compatibilidad del harness con free tier y rate limits
+- **Artefactos afectados**: .opencode/agents/*.md (orquestador sin pin + sección "Política de modelo"; `deny`→`ask` en coder/orchestrator/tester/reviewer), AGENTS.md (matriz + notas), docs/agent-authoring.md (§4.2), plantillas en crates/sdd-storage/templates/ (replican todo lo anterior)
+- **Impacto**: el orquestador hereda siempre el modelo global activo (agnóstico al proveedor); ante un fallo de modelo informa en voz alta modelo + error + siguiente sugerido de la cadena (global → space-bunny-free → nemotron-3-ultra-free → modelo fuerte del proveedor pago) y nunca degrada en silencio. Los subagentes conservan pin por rol; `/models` mueve solo al orquestador. Los proyectos existentes adoptan el cambio con `sdd init --update`.
+- **Tareas afectadas**: TASK-FW-230
+
 ### [CHG-001] 2026-10-11 — `sdd init` instala los archivos de proyecto del harness
 
 - **Motivo**: `sdd init` solo creaba `.sdd/`. Un proyecto externo instalado con el binario quedaba sin agentes, comandos, skills ni `AGENTS.md`, es decir sin harness, por lo que el framework no era utilizable fuera de su propio repositorio. Tampoco existía forma de adoptar mejoras del harness al actualizar el framework.

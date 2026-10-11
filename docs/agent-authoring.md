@@ -110,7 +110,7 @@ Reglas:
 
 | Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual) | Mode |
 |--------|-------------|-----------------------------|------------------------------|------|
-| orchestrator | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | primary |
+| orchestrator | `/orchestrate` | sin pin — hereda el modelo global activo (ver §4.2) | cadena de preferencia en §4.2 | primary |
 | architect | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | subagent |
 | planner | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | subagent |
 | coder | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | subagent |
@@ -160,6 +160,34 @@ Reglas:
 el `orchestrator`; si se dispara a mano, usar `opencode/big-pickle`
 (versatilidad, sin sesgo estructural) o
 `opencode/muse-spark-1.3-contributor-free` (desglose conceptual).
+
+### 4.2 Política de modelo del orquestador (sin pin + cadena de preferencia)
+
+OpenCode **no soporta fallback automático de modelos por agente**: no existe
+una lista de modelos priorizados que el runtime recorra ante un fallo
+(rate limit, cuota, error de proveedor). Verificado en
+[docs de modelos](https://opencode.ai/docs/models/): el agente usa un único
+`model`, o — si no se especifica — el modelo globalmente activo
+(`opencode.json` → `/models` → flag `--model`).
+
+El harness implementa el equivalente funcional más cercano:
+
+1. **El orquestador no fija `model:`** en su frontmatter: hereda siempre el
+   modelo global activo. Así sigue automáticamente al proveedor que el
+   usuario tenga activo (free tier u otro proveedor), sin importar cuál sea.
+2. **Cadena de preferencia documentada** (en el propio agente y en
+   `AGENTS.md`): ante un fallo, el orquestador pide al usuario cambiar con
+   `/models` en este orden — reintentar el global tras la ventana del error;
+   en Zen free, `space-bunny-free` y luego `nemotron-3-ultra-free`; en
+   proveedor pago, su modelo fuerte.
+3. **Fallos nunca silenciosos**: el orquestador debe informar en voz alta
+   modelo + error + siguiente modelo sugerido. Nunca inventar resultados ni
+   degradar el flujo en silencio. Un harness que falla en silencio pierde su
+   sentido.
+4. **Subagentes con pin por rol** (tabla de §4): `/models` mueve solo al
+   orquestador. Si un subagente falla por rate limit, se aplica la misma
+   cadena editando su frontmatter. Esto es explícito y queda registrado, no
+   silencioso.
 
 ## 5. Flujo entre agentes
 

@@ -135,4 +135,37 @@ mod tests {
     fn test_gitignore_template_has_content() {
         assert!(template_content(".gitignore").contains("/target"));
     }
+
+    /// El orquestador no debe fijar `model:`: hereda el modelo global activo
+    /// (política documentada en docs/agent-authoring.md §4.2). Si alguien lo
+    /// vuelve a fijar, este test lo detecta.
+    #[test]
+    fn test_orchestrator_template_has_no_pinned_model() {
+        let content = template_content("orchestrator.md");
+        assert!(
+            !content
+                .lines()
+                .any(|line| line.trim_start().starts_with("model:")),
+            "orchestrator template must not pin a model"
+        );
+    }
+
+    /// Ningún agente instalado puede terminar su bloque `bash` con `"*": deny`:
+    /// rompe el free tier de OpenCode Zen (opencode#50627, #53347, #49680).
+    #[test]
+    fn test_no_agent_template_denies_all_bash() {
+        for key in [
+            "orchestrator.md",
+            "architect.md",
+            "planner.md",
+            "coder.md",
+            "tester.md",
+            "reviewer.md",
+        ] {
+            assert!(
+                !template_content(key).contains("\"*\": deny"),
+                "{key} must not contain bash \"*\": deny"
+            );
+        }
+    }
 }
