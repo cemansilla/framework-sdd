@@ -132,7 +132,7 @@ impl FilesystemAdapter {
             .await
     }
 
-    async fn atomic_write(&self, path: &Path, data: &[u8]) -> Result<(), StorageError> {
+    pub(crate) async fn atomic_write(&self, path: &Path, data: &[u8]) -> Result<(), StorageError> {
         let temp_path = path.with_extension("tmp");
 
         if let Some(parent) = path.parent() {

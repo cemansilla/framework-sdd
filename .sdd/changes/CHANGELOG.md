@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [CHG-003] 2026-10-11 — Sistema de fallback de modelos del framework (agnóstico al proveedor)
+
+- **Motivo**: OpenCode no soporta fallback automático de modelos por agente: un modelo con rate limit dejaba el flujo muerto sin alternativa gestionada por el harness. El workaround previo (orquestador sin pin) resolvía solo el caso del default global.
+- **Origen**: feature — resiliencia del harness ante fallos de modelo
+- **Artefactos afectados**: crates/sdd-core (módulo `model_chain`: esquema de cadenas/providers/salud + parsing y validación puros), crates/sdd-storage (persistencia de `config/models.json` y `config/model-health.json`, edición atómica del `model:` en frontmatter, plantilla `config/models.json`), crates/sdd-cli (subcomando `sdd model status|health|fallback|report`, probe HTTP genérico openai/anthropic con credenciales por env o archivo, nunca literales), .opencode/agents/orchestrator.md (pin = cabeza de cadena + health check al arrancar + auto-fallback), .opencode/commands/model-fallback.md, AGENTS.md, docs/agent-authoring.md (§4.2), docs/user-guide.md, docs/cli-reference.md
+- **Impacto**: cada rol tiene su cadena ordenada terminada en `inherit`; `sdd model fallback --role <rol>` prueba y fija el primer modelo sano (write-back por rol, atómico); si todo falla exit ≠ 0 sin escribir nada. El fallback no toca tareas, código ni git: lo avanzado se reanuda con `sdd status`. Fallos siempre en voz alta, nunca silenciosos. Pin de cada agente = cabeza de su cadena (test `test_agent_pins_match_chain_heads`).
+- **Tareas afectadas**: TASK-FW-230
+
 ### [CHG-002] 2026-10-11 — Orquestador sin modelo fijado + cadena de preferencia ante rate limits
 
 - **Motivo**: OpenCode no soporta fallback automático de modelos por agente. El orquestador tenía `model:` fijado a un free tier que al agotarse (rate limit, 6h de espera) dejaba el flujo muerto sin alternativa, y `bash: "*": deny` en los agentes custom disparaba además `AI_APICallError: OpenCode's free tier can only be used from within OpenCode` con el mismo modelo que `build`/`plan` usan sin problema (bugs upstream opencode#50627, #53347, #49680).

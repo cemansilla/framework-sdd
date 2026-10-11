@@ -19,17 +19,21 @@ Ayuda: `sdd --help` / `sdd <comando> --help`.
 | Código | Causa |
 |--------|-------|
 | `0` | éxito (incluye mensajes de "no encontrado" de los stubs) |
-| `1` | error de ejecución: `validate` con errores; fallos de I/O o manifest en `init`/`status`/`changelog` |
+| `1` | error de ejecución: `validate` con errores; fallos de I/O o manifest en `init`/`status`/`changelog`; modelos caídos en `model health`; cadena agotada en `model fallback`; rol o proveedor desconocido |
 | `2` | error de uso de clap (flag desconocido, argumento requerido ausente) |
 
 ## 2. Comandos con I/O real
 
 | Comando | Flags | Qué hace |
 |---------|-------|----------|
-| `init` | `-p <PATH>` | Crea la estructura `.sdd/` (15 directorios), plantillas y `manifest.json`. **Idempotente**: nunca sobrescribe. `project_id` = nombre del directorio. |
+| `init` | `-p <PATH>`, `--update` | Crea la estructura `.sdd/` (15 directorios), plantillas y `manifest.json`. **Idempotente**: nunca sobrescribe. `project_id` = nombre del directorio. Instala además `AGENTS.md`, `.opencode/` y `.gitignore`; `--update` los refresca a las plantillas vigentes sin tocar artefactos del usuario. |
 | `status` | `-p <PATH>` | Lee `manifest.json` (error de parse → exit 1) y muestra ruta/project_id/versión + estado de brief, requirements, architecture y tasks (`✓`/`✗`). |
 | `validate` | `-p <PATH>` | Validación estricta. **Errores → exit 1**: manifest inválido, o vacíos/faltantes `brief/brief.md`, `architecture/architecture.md`, `changes/CHANGELOG.md`, `config/project.md`. **Advertencias → exit 0**: `requirements/` o `tasks/` sin `.md`. |
 | `changelog` | `-p <PATH>` | Lee `.sdd/changes/CHANGELOG.md`, parsea entradas `## [ID]` y anidadas `### [ID]` con campos `- **Key**: value`, e imprime `[ID] fecha — título` con sus campos. Archivo vacío → "No changes recorded yet." |
+| `model status` | `-p <PATH>` | Muestra por rol: cadena de fallback, modelo fijado y última salud conocida. Sin red. |
+| `model health` | `-p`, `-r/--role`, `--all` | Prueba el modelo actual de un rol (o todos) con HTTP genérico y registra en `.sdd/config/model-health.json`. **Exit 1** si algo probado está caído. |
+| `model fallback` | `-p`, `<ROLE>` (req.) | Recorre la cadena del rol y fija el primer modelo sano en `.opencode/agents/<rol>.md` (atómico). Solo toca ese archivo y `model-health.json`. **Exit 1** si todo falla, sin escribir nada. |
+| `model report` | `-p`, `<ROLE>`, `-e/--error` (req.) | Registra un fallo observado sin probar. Para que la próxima sesión lo anuncie en vez de redescubrirlo. |
 
 ## 3. Comandos stub (solo lectura, salida orientativa)
 
@@ -69,6 +73,9 @@ sdd status                        # estado de artefactos
 sdd validate; echo $?             # 0 ok · 1 con errores
 sdd changelog                     # historial de cambios
 sdd requirements --add "Debe X"   # stub: no persiste (v0.1.0)
+sdd model status                  # cadenas y salud por rol (sin red)
+sdd model health --role coder     # probar el modelo actual del rol
+sdd model fallback --role coder   # fijar el primer modelo sano
 ```
 
 ## 6. Estado en v0.1.0

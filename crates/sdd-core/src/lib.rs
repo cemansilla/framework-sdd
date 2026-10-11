@@ -27,6 +27,7 @@ pub mod issue_tracker;
 pub mod lifecycle;
 pub mod lifecycle_engine;
 pub mod lifecycle_phases;
+pub mod model_chain;
 pub mod orchestrator;
 pub mod output_contract;
 pub mod permission_engine;
@@ -120,6 +121,10 @@ pub use lifecycle_engine::{LifecycleError, ProjectContext, StateTransition};
 pub use lifecycle_phases::{
     BrainstormingSession, BrainstormingStatus, Brief, BriefScope, DiscoveryContext, Idea,
     IdeaCategory, IdeaPriority, Stakeholder,
+};
+pub use model_chain::{
+    chain_for, parse_chain_entry, AuthSpec, ChainEntry, ModelChainConfig, ModelChainError,
+    ModelHealth, ModelHealthFile, ModelRef, ProviderAuth, ProviderDef, RoleHealth, INHERIT_ENTRY,
 };
 pub use orchestrator::{
     ApprovalRequest, Checkpoint, ExecutionRequest, ExecutionResult, ExecutionStatus, Orchestrator,

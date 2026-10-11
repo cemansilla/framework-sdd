@@ -110,7 +110,7 @@ Reglas:
 
 | Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual) | Mode |
 |--------|-------------|-----------------------------|------------------------------|------|
-| orchestrator | `/orchestrate` | sin pin — hereda el modelo global activo (ver §4.2) | cadena de preferencia en §4.2 | primary |
+| orchestrator | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | primary |
 | architect | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | subagent |
 | planner | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | subagent |
 | coder | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | subagent |
@@ -161,33 +161,39 @@ el `orchestrator`; si se dispara a mano, usar `opencode/big-pickle`
 (versatilidad, sin sesgo estructural) o
 `opencode/muse-spark-1.3-contributor-free` (desglose conceptual).
 
-### 4.2 Política de modelo del orquestador (sin pin + cadena de preferencia)
+### 4.2 Fallback de modelos por pasos (agnóstico al proveedor)
 
 OpenCode **no soporta fallback automático de modelos por agente**: no existe
 una lista de modelos priorizados que el runtime recorra ante un fallo
-(rate limit, cuota, error de proveedor). Verificado en
-[docs de modelos](https://opencode.ai/docs/models/): el agente usa un único
-`model`, o — si no se especifica — el modelo globalmente activo
-(`opencode.json` → `/models` → flag `--model`).
+(rate limit, cuota, error de proveedor). El framework implementa su propio
+sistema, sin ataduras al host:
 
-El harness implementa el equivalente funcional más cercano:
-
-1. **El orquestador no fija `model:`** en su frontmatter: hereda siempre el
-   modelo global activo. Así sigue automáticamente al proveedor que el
-   usuario tenga activo (free tier u otro proveedor), sin importar cuál sea.
-2. **Cadena de preferencia documentada** (en el propio agente y en
-   `AGENTS.md`): ante un fallo, el orquestador pide al usuario cambiar con
-   `/models` en este orden — reintentar el global tras la ventana del error;
-   en Zen free, `space-bunny-free` y luego `nemotron-3-ultra-free`; en
-   proveedor pago, su modelo fuerte.
-3. **Fallos nunca silenciosos**: el orquestador debe informar en voz alta
-   modelo + error + siguiente modelo sugerido. Nunca inventar resultados ni
-   degradar el flujo en silencio. Un harness que falla en silencio pierde su
+1. **Cadenas por rol** en `.sdd/config/models.json` (plantilla instalada por
+   `sdd init`): cada rol tiene su cadena ordenada — el primer elemento es el
+   modelo fijado en el frontmatter del agente — y terminada en `inherit`,
+   que quita el pin para seguir el modelo global activo del host.
+2. **Probe agnóstico**: `sdd model health` / `sdd model fallback` prueban
+   cada modelo con HTTP genérico (`openai-chat-completions` o
+   `anthropic-messages` según `providers.<id>.request_style`), con
+   credenciales desde env o archivo JSON (nunca literales en config).
+   Funciona con cualquier proveedor que hable esos protocolos.
+3. **Write-back por rol**: el fallback escribe `model:` en
+   `.opencode/agents/<rol>.md` (atómico: temp + rename) y registra en
+   `.sdd/config/model-health.json`. Si todo falla: exit ≠ 0 con cada error
+   observado y **nada se escribe**.
+4. **Reanudación garantizada**: el fallback no toca tareas, código ni git.
+   Lo avanzado se retoma con `sdd status` (la tarea sigue `IN_PROGRESS`).
+5. **Auto-resolución al arrancar**: el orquestador ejecuta
+   `sdd model health --role orchestrator` al iniciar sesión; si está caído,
+   ejecuta el fallback y anuncia el cambio. Un fallo *mid-sesión* requiere
+   `/model-fallback` manual + reinicio de sesión (el host no expone hooks de
+   error de modelo).
+6. **Fallos nunca silenciosos**: el orquestador informa en voz alta modelo +
+   error + siguiente sugerido. Un harness que falla en silencio pierde su
    sentido.
-4. **Subagentes con pin por rol** (tabla de §4): `/models` mueve solo al
-   orquestador. Si un subagente falla por rate limit, se aplica la misma
-   cadena editando su frontmatter. Esto es explícito y queda registrado, no
-   silencioso.
+7. **Pin = cabeza de cadena**: el `model:` de cada agente y el primer
+   elemento de su cadena son un solo contrato (test
+   `test_agent_pins_match_chain_heads` en `sdd-storage`).
 
 ## 5. Flujo entre agentes
 

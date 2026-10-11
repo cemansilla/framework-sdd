@@ -8,7 +8,7 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 | Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual vía `/models`) | Mode | Rol Principal |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Orquestador** | `/orchestrate` | sin pin — hereda el modelo global activo | ver cadena de preferencia abajo | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
+| **Orquestador** | `/orchestrate` | `opencode/longcat-2.5-preview-free` (cabeza de su cadena; ver fallback abajo) | cadena `inherit` → global | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
 | **Arquitecto** | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
 | **Planificador** | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
 | **Desarrollador** | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
@@ -17,17 +17,17 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 **Notas de modelos:**
 
-- El **orquestador no fija modelo**: hereda el modelo global activo de
-  OpenCode (`opencode.json` → `/models` → flag `--model`). Así sigue
-  automáticamente al proveedor que el usuario tenga activo. Cadena de
-  preferencia ante fallos (rate limit, cuota): 1) reintentar el global tras
-  la ventana del error; 2) en Zen free: `opencode/space-bunny-free`, luego
-  `opencode/nemotron-3-ultra-free`; 3) en proveedor pago: su modelo fuerte.
-  Detalle en el propio agente (`.opencode/agents/orchestrator.md`, sección
-  "Política de modelo").
-- Los **subagentes conservan su modelo fijado por rol** (tabla de arriba);
-  `/models` mueve solo al orquestador. Si un subagente falla por rate limit,
-  aplica la misma cadena editando su frontmatter.
+- **Fallback de modelos por pasos** (agnóstico al proveedor): cada rol tiene
+  su cadena ordenada en `.sdd/config/models.json`, terminada en `inherit`
+  (quita el pin y sigue el modelo global activo del host). Ante un fallo de
+  modelo: `sdd model health --role <rol>` lo detecta, `sdd model fallback
+  --role <rol>` prueba la cadena y fija el primero sano, `/model-fallback`
+  es el atajo. Solo toca `.opencode/agents/<rol>.md` y
+  `.sdd/config/model-health.json`: tareas, código y git quedan intactos para
+  reanudar. Si todo falla: exit ≠ 0 con cada error, nada se escribe.
+- Los **subagentes conservan su modelo fijado por rol** (tabla de arriba =
+  cabeza de su cadena). El pin de cada agente y la cabeza de su cadena son
+  un solo contrato (test `test_agent_pins_match_chain_heads`).
 - **Fallos nunca silenciosos**: ante un error de modelo o proveedor, el
   orquestador debe informarlo en voz alta (modelo + error + siguiente modelo
   sugerido). Nunca inventar resultados ni degradar el flujo en silencio.

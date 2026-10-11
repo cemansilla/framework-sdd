@@ -35,6 +35,7 @@ const TEMPLATE_FILES: &[(&str, &str)] = &[
     (".opencode/commands/test.md", "test.md"),
     (".opencode/commands/review.md", "review.md"),
     (".opencode/commands/orchestrate.md", "orchestrate.md"),
+    (".opencode/commands/model-fallback.md", "model-fallback.md"),
 ];
 
 pub fn project_templates() -> Vec<(PathBuf, &'static str)> {
@@ -78,6 +79,9 @@ fn template_content(path: &str) -> &'static str {
         "test.md" => include_str!("../templates/.opencode/commands/test.md"),
         "review.md" => include_str!("../templates/.opencode/commands/review.md"),
         "orchestrate.md" => include_str!("../templates/.opencode/commands/orchestrate.md"),
+        "model-fallback.md" => {
+            include_str!("../templates/.opencode/commands/model-fallback.md")
+        }
         _ => panic!("unknown template: {path}"),
     }
 }
@@ -136,18 +140,37 @@ mod tests {
         assert!(template_content(".gitignore").contains("/target"));
     }
 
-    /// El orquestador no debe fijar `model:`: hereda el modelo global activo
-    /// (política documentada en docs/agent-authoring.md §4.2). Si alguien lo
-    /// vuelve a fijar, este test lo detecta.
+    /// Each agent's pinned model must equal the head of its fallback chain in
+    /// the bundled `config/models.json`: the pin and the chain are a single
+    /// contract, and this test keeps them from drifting apart.
     #[test]
-    fn test_orchestrator_template_has_no_pinned_model() {
-        let content = template_content("orchestrator.md");
-        assert!(
-            !content
+    fn test_agent_pins_match_chain_heads() {
+        use sdd_core::model_chain::ChainEntry;
+        let config = crate::structure::default_model_chain_config();
+        for (role, key) in [
+            ("orchestrator", "orchestrator.md"),
+            ("architect", "architect.md"),
+            ("planner", "planner.md"),
+            ("coder", "coder.md"),
+            ("tester", "tester.md"),
+            ("reviewer", "reviewer.md"),
+        ] {
+            let chain = sdd_core::model_chain::chain_for(&config, role).unwrap();
+            let head = match &chain[0] {
+                ChainEntry::Pinned(model_ref) => {
+                    format!("{}/{}", model_ref.provider, model_ref.model)
+                }
+                ChainEntry::Inherit => panic!("role {role} chain must start pinned"),
+            };
+            let pinned = template_content(key)
                 .lines()
-                .any(|line| line.trim_start().starts_with("model:")),
-            "orchestrator template must not pin a model"
-        );
+                .find_map(|line| line.strip_prefix("model:").map(|v| v.trim().to_string()));
+            assert_eq!(
+                pinned.as_deref(),
+                Some(head.as_str()),
+                "{key} pin must equal the head of the {role} chain"
+            );
+        }
     }
 
     /// Ningún agente instalado puede terminar su bloque `bash` con `"*": deny`:
