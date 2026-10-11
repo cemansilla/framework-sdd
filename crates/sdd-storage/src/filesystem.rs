@@ -1,5 +1,4 @@
 use crate::manifest::Manifest;
-use crate::project_templates;
 use crate::storage_port::{StorageError, StoragePort};
 use crate::structure::{default_templates, SddStructure};
 use async_trait::async_trait;
@@ -69,42 +68,6 @@ impl FilesystemAdapter {
             .map_err(StorageError::Io)?;
 
         Ok(manifest)
-    }
-
-    /// Install project-level files (AGENTS.md, .gitignore, .opencode/).
-    ///
-    /// Existing files are never overwritten, so running this on a populated
-    /// project is idempotent and never destroys user content.
-    pub async fn install_project_files(&self) -> Result<(), StorageError> {
-        for (relative_path, content) in project_templates::project_templates() {
-            let full_path = self.base_path.join(&relative_path);
-            if !full_path.exists() {
-                if let Some(parent) = full_path.parent() {
-                    fs::create_dir_all(parent).await.map_err(StorageError::Io)?;
-                }
-                fs::write(&full_path, content)
-                    .await
-                    .map_err(StorageError::Io)?;
-            }
-        }
-        Ok(())
-    }
-
-    /// Update project-level files with the latest templates.
-    ///
-    /// This overwrites existing project files (AGENTS.md, .gitignore,
-    /// .opencode/) with the current template content. Use with caution.
-    pub async fn update_project_files(&self) -> Result<(), StorageError> {
-        for (relative_path, content) in project_templates::project_templates() {
-            let full_path = self.base_path.join(&relative_path);
-            if let Some(parent) = full_path.parent() {
-                fs::create_dir_all(parent).await.map_err(StorageError::Io)?;
-            }
-            fs::write(&full_path, content)
-                .await
-                .map_err(StorageError::Io)?;
-        }
-        Ok(())
     }
 
     pub async fn load_manifest(&self) -> Result<Manifest, StorageError> {
@@ -334,69 +297,6 @@ mod tests {
         walk(root, root, &mut entries)?;
         entries.sort();
         Ok(entries)
-    }
-
-    #[tokio::test]
-    async fn test_install_project_files() {
-        let temp = TempDir::new().unwrap();
-        let adapter = FilesystemAdapter::new(temp.path());
-
-        adapter.initialize("test-project").await.unwrap();
-        adapter.install_project_files().await.unwrap();
-
-        assert!(temp.path().join("AGENTS.md").exists());
-        assert!(temp.path().join(".gitignore").exists());
-        assert!(temp
-            .path()
-            .join(".opencode/agents/orchestrator.md")
-            .exists());
-        assert!(temp
-            .path()
-            .join(".opencode/skills/branching-sdd/SKILL.md")
-            .exists());
-        assert!(temp.path().join(".opencode/commands/plan.md").exists());
-    }
-
-    #[tokio::test]
-    async fn test_install_project_files_idempotent() {
-        let temp = TempDir::new().unwrap();
-        let adapter = FilesystemAdapter::new(temp.path());
-
-        adapter.initialize("test-project").await.unwrap();
-        adapter.install_project_files().await.unwrap();
-
-        let agents_content = tokio::fs::read_to_string(temp.path().join("AGENTS.md"))
-            .await
-            .unwrap();
-
-        adapter.install_project_files().await.unwrap();
-
-        let agents_content_after = tokio::fs::read_to_string(temp.path().join("AGENTS.md"))
-            .await
-            .unwrap();
-
-        assert_eq!(agents_content, agents_content_after);
-    }
-
-    #[tokio::test]
-    async fn test_update_project_files() {
-        let temp = TempDir::new().unwrap();
-        let adapter = FilesystemAdapter::new(temp.path());
-
-        adapter.initialize("test-project").await.unwrap();
-        adapter.install_project_files().await.unwrap();
-
-        tokio::fs::write(temp.path().join("AGENTS.md"), "# Custom content\n")
-            .await
-            .unwrap();
-
-        adapter.update_project_files().await.unwrap();
-
-        let content = tokio::fs::read_to_string(temp.path().join("AGENTS.md"))
-            .await
-            .unwrap();
-        assert_ne!(content, "# Custom content\n");
-        assert!(content.contains("SDD AI Harness"));
     }
 
     #[tokio::test]

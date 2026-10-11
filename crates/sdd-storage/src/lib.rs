@@ -3,7 +3,6 @@ pub mod filesystem;
 pub mod lock;
 pub mod manifest;
 pub mod migration;
-pub mod project_templates;
 pub mod storage_port;
 pub mod structure;
 

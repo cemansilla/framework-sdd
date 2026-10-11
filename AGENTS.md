@@ -8,7 +8,7 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 | Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual vía `/models`) | Mode | Rol Principal |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Orquestador** | `/orchestrate` | `opencode/space-bunny-free` | `opencode-go/qwen3.7-plus` | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
+| **Orquestador** | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
 | **Arquitecto** | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
 | **Planificador** | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
 | **Desarrollador** | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
