@@ -102,6 +102,23 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 ---
 
+## Regla Crítica: `bash: "*": ask` en Todos los Agentes
+
+Ningún agente debe terminar su bloque `bash` con `"*": deny`. **Usar `"*": ask`.**
+
+Los modelos gratuitos de OpenCode Zen rechazan la sesión con
+`AI_APICallError: OpenCode's free tier can only be used from within OpenCode`
+cuando el agente tiene permisos restrictivos de `bash`. El síntoma es que el
+mismo modelo funciona en `build`/`plan` (built-in) y falla en los agentes
+custom del harness — **no es un problema de modelo**.
+
+Upstream: [#50627](https://github.com/anomalyco/opencode/issues/50627),
+[#53347](https://github.com/anomalyco/opencode/issues/53347),
+[#49680](https://github.com/anomalyco/opencode/issues/49680).
+Detalle en [`docs/agent-authoring.md`](docs/agent-authoring.md#permisos-y-free-tier-de-opencode-zen--deny-rompe-el-free-tier).
+
+---
+
 ## Conventional Commits
 
 ### Formato

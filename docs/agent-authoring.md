@@ -56,10 +56,35 @@ permission:
 
 - `read` / `glob` / `grep`: rutas con `allow` explícito.
 - `edit`: `deny` para agentes que no escriben (orchestrator, reviewer).
-- `bash`: lista explícita de comandos con wildcard; terminar con
-  `"*": deny`. Ej.: reviewer solo `cargo fmt/clippy/test` y `git
-  status/diff/log` de solo lectura.
+- `bash`: lista explícita de comandos con wildcard; **terminar con
+  `"*": ask`**, nunca con `"*": deny` (ver la nota de free tier más abajo).
+  Ej.: reviewer solo `cargo fmt/clippy/test` y `git status/diff/log` de solo
+  lectura.
 - `task`: `deny` salvo el orquestador (único que invoca subagentes).
+
+### Permisos y free tier de OpenCode Zen — `"*": deny` rompe el free tier
+
+**Regla dura: ningún agente del harness debe terminar su bloque `bash` con
+`"*": deny`. Usar `"*": ask`.**
+
+Los modelos gratuitos de OpenCode Zen (`opencode/*`) rechazan la sesión con
+`AI_APICallError: OpenCode's free tier can only be used from within OpenCode`
+cuando el agente que atiende el request trae un array de herramientas
+restringido — un bloque de `permissions` que deniega `bash`. El gate del
+free tier confunde "agente con permisos restricted" con "cliente fuera de
+OpenCode" y corta antes del primer tool call. Reportado upstream:
+
+- [anomalyco/opencode#50627](https://github.com/anomalyco/opencode/issues/50627) — `deny shell *` en agente primary rompe el free tier.
+- [anomalyco/opencode#53347](https://github.com/anomalyco/opencode/issues/53347) — agente primary custom denegado mientras el `plan` built-in funciona con el mismo modelo.
+- [anomalyco/opencode#49680](https://github.com/anomalyco/opencode/issues/49680) — mismo error en subagentes y en `compaction`/`title`.
+
+Síntoma característico: el mismo modelo funciona en `build`/`plan` (built-in,
+sin bloque `permissions`) y falla en el agente custom. **No es un problema de
+modelo** — cambiar de modelo no lo arregla.
+
+Mitigación hasta que se corrija upstream: `"*": ask` en lugar de `"*": deny`.
+Se conserva el control de acceso (todo comando no listado requiere
+aprobación explícita del usuario) sin disparar el bug.
 
 ## 3. Cuerpo del agente
 

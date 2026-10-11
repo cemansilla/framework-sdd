@@ -11,7 +11,7 @@ permission:
     git branch *: allow
     git checkout *: allow
     git diff *: allow
-    "*": deny
+    "*": ask
   task: allow
   todowrite: allow
   edit: deny

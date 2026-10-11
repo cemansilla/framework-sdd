@@ -22,7 +22,7 @@ permission:
     git status: allow
     git diff *: allow
     git log *: allow
-    "*": deny
+    "*": ask
   task: deny
   todowrite: allow
 ---

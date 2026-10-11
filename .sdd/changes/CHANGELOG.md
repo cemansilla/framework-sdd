@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [CHG-001] 2026-10-11 — `sdd init` instala los archivos de proyecto del harness
+
+- **Motivo**: `sdd init` solo creaba `.sdd/`. Un proyecto externo instalado con el binario quedaba sin agentes, comandos, skills ni `AGENTS.md`, es decir sin harness, por lo que el framework no era utilizable fuera de su propio repositorio. Tampoco existía forma de adoptar mejoras del harness al actualizar el framework.
+- **Origen**: feature
+- **Artefactos afectados**: crates/sdd-storage (módulo `project_templates`, plantillas embebidas con `include_str!`, `install_project_files`, `update_project_files`), crates/sdd-cli (`init --update`), README.md, docs/user-guide.md
+- **Impacto**: `sdd init` instala ahora `AGENTS.md`, `.opencode/{agents,commands,skills}/` y `.gitignore` además de `.sdd/`, de forma idempotente (no pisa archivos existentes). `sdd init --update` refresca esos archivos tras `cargo install --force`, sin tocar los artefactos del usuario en `.sdd/`. El framework se distribuye como binario (`cargo install --git https://github.com/cemansilla/framework-sdd sdd-cli`) y los proyectos externos no dependen de él en su `Cargo.toml`.
+- **Tareas afectadas**: TASK-FW-230
+
 ### [TASK-FW-220] 2026-09-26 — Defaults a modelos gratuitos (OpenCode Zen)
 
 - **Motivo**: Se agotó la cuota del plan pago `opencode-go`; los agentes y los defaults globales deben correr con modelos gratuitos ($0/Mtok) sin perder acceso a los de pago.
