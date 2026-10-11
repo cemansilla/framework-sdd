@@ -12,12 +12,15 @@ Guía práctica para llevar un proyecto desde cero usando el framework SDD.
 ## 2. Instalación
 
 ```bash
+# Instalar el binario globalmente desde GitHub
+cargo install --git https://github.com/cemansilla/framework-sdd sdd-cli
+sdd --version        # sdd 0.1.0
+
+# O compilar desde el repositorio
 git clone https://github.com/cemansilla/framework-sdd
 cd framework-sdd
 cargo build --release
-# el binario queda en target/release/sdd
 export PATH="$PWD/target/release:$PATH"
-sdd --version        # sdd 0.1.0
 ```
 
 ## 3. Inicializar un proyecto
@@ -27,8 +30,10 @@ mkdir mi-proyecto && cd mi-proyecto
 sdd init
 ```
 
-Esto crea la estructura `.sdd/` con plantillas editables y un
-`manifest.json` cuyo `project_id` se deriva del nombre del directorio.
+Esto crea:
+- La estructura `.sdd/` con plantillas editables
+- Un `manifest.json` cuyo `project_id` se deriva del nombre del directorio
+- Los archivos de proyecto: `AGENTS.md`, `.opencode/`, `.gitignore`
 
 Propiedades de `sdd init`:
 
@@ -36,6 +41,22 @@ Propiedades de `sdd init`:
   archivos que falten).
 - Siempre puede reconstruir las plantillas perdidas sin tocar artefactos
   del usuario.
+
+### Actualizar archivos de proyecto
+
+Cuando el framework se actualiza, puedes refrescar los archivos de proyecto
+(AGENTS.md, .opencode/, .gitignore) a las plantillas más recientes:
+
+```bash
+# Actualizar el binario del framework
+cargo install --git https://github.com/cemansilla/framework-sdd sdd-cli --force
+
+# Actualizar los archivos de proyecto en el directorio actual
+sdd init --update
+```
+
+Esto sobrescribe los archivos de proyecto con el contenido de las plantillas
+vigentes. Los artefactos del usuario en `.sdd/` nunca se tocan.
 
 ## 4. Flujo de trabajo SDD
 

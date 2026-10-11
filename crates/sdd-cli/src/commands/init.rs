@@ -16,7 +16,7 @@ fn project_id_for(path: &Path) -> String {
         .unwrap_or_else(|| "sdd-project".to_string())
 }
 
-pub async fn execute(path: Option<PathBuf>) -> Result<()> {
+pub async fn execute(path: Option<PathBuf>, update: bool) -> Result<()> {
     let project_path = path.unwrap_or_else(|| PathBuf::from("."));
 
     tracing::info!("Initializing SDD project at {:?}", project_path);
@@ -28,10 +28,18 @@ pub async fn execute(path: Option<PathBuf>) -> Result<()> {
     let project_id = project_id_for(&project_path);
 
     adapter.initialize(&project_id).await?;
+    adapter.install_project_files().await?;
 
     println!("✓ SDD project initialized at {:?}", project_path);
     println!("✓ Created .sdd/ directory structure");
     println!("✓ Created initial configuration files");
+    println!("✓ Installed project files (AGENTS.md, .opencode/, .gitignore)");
+
+    if update {
+        adapter.update_project_files().await?;
+        println!("✓ Updated project files to latest templates");
+    }
+
     println!("\nNext steps:");
     println!("  1. Edit .sdd/config/project.md to configure your project");
     println!("  2. Run 'sdd brainstorm' to start exploring your idea");

@@ -85,7 +85,7 @@ Reglas:
 
 | Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual) | Mode |
 |--------|-------------|-----------------------------|------------------------------|------|
-| orchestrator | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | primary |
+| orchestrator | `/orchestrate` | `opencode/space-bunny-free` | `opencode-go/qwen3.7-plus` | primary |
 | architect | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | subagent |
 | planner | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | subagent |
 | coder | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | subagent |

@@ -1,7 +1,7 @@
 ---
 name: orchestrator
 description: Agente orquestador general del flujo de trabajo SDD.
-model: opencode/longcat-2.5-preview-free
+model: opencode/space-bunny-free
 mode: primary
 permission:
   read: allow

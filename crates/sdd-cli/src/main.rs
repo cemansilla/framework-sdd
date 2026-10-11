@@ -19,6 +19,9 @@ enum Commands {
         /// Project path (defaults to current directory)
         #[arg(short, long)]
         path: Option<PathBuf>,
+        /// Update project files to latest templates
+        #[arg(long)]
+        update: bool,
     },
     /// Show project status
     Status {
@@ -177,8 +180,8 @@ async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Init { path }) => {
-            commands::init::execute(path).await?;
+        Some(Commands::Init { path, update }) => {
+            commands::init::execute(path, update).await?;
         }
         Some(Commands::Status { path }) => {
             commands::status::execute(path).await?;
