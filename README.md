@@ -9,8 +9,8 @@ del proyecto persistido en un directorio `.sdd/` versionado con Git.
 
 ```bash
 # Requisitos: Rust 1.80+ (MSRV), Git
-cargo build --release
-export PATH="$PWD/target/release:$PATH"
+cargo install --git https://github.com/cemansilla/framework-sdd sdd-cli
+sdd --version
 
 # Inicializar un proyecto SDD en el directorio actual
 sdd init
@@ -21,9 +21,15 @@ sdd validate          # exit 1 si faltan artefactos requeridos
 
 # Ver el historial de cambios
 sdd changelog
+
+# Tras actualizar el framework: refrescar AGENTS.md, .opencode/, .gitignore
+sdd init --update
 ```
 
 `sdd init` es idempotente: nunca sobrescribe artefactos existentes.
+`sdd init --update` sobrescribe los archivos de proyecto (`AGENTS.md`,
+`.opencode/`, `.gitignore`) con las plantillas de la versión instalada del
+framework; los artefactos del usuario en `.sdd/` nunca se tocan.
 
 ## Estructura de un proyecto `.sdd/`
 

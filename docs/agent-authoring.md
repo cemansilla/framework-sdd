@@ -56,10 +56,35 @@ permission:
 
 - `read` / `glob` / `grep`: rutas con `allow` explícito.
 - `edit`: `deny` para agentes que no escriben (orchestrator, reviewer).
-- `bash`: lista explícita de comandos con wildcard; terminar con
-  `"*": deny`. Ej.: reviewer solo `cargo fmt/clippy/test` y `git
-  status/diff/log` de solo lectura.
+- `bash`: lista explícita de comandos con wildcard; **terminar con
+  `"*": ask`**, nunca con `"*": deny` (ver la nota de free tier más abajo).
+  Ej.: reviewer solo `cargo fmt/clippy/test` y `git status/diff/log` de solo
+  lectura.
 - `task`: `deny` salvo el orquestador (único que invoca subagentes).
+
+### Permisos y free tier de OpenCode Zen — `"*": deny` rompe el free tier
+
+**Regla dura: ningún agente del harness debe terminar su bloque `bash` con
+`"*": deny`. Usar `"*": ask`.**
+
+Los modelos gratuitos de OpenCode Zen (`opencode/*`) rechazan la sesión con
+`AI_APICallError: OpenCode's free tier can only be used from within OpenCode`
+cuando el agente que atiende el request trae un array de herramientas
+restringido — un bloque de `permissions` que deniega `bash`. El gate del
+free tier confunde "agente con permisos restricted" con "cliente fuera de
+OpenCode" y corta antes del primer tool call. Reportado upstream:
+
+- [anomalyco/opencode#50627](https://github.com/anomalyco/opencode/issues/50627) — `deny shell *` en agente primary rompe el free tier.
+- [anomalyco/opencode#53347](https://github.com/anomalyco/opencode/issues/53347) — agente primary custom denegado mientras el `plan` built-in funciona con el mismo modelo.
+- [anomalyco/opencode#49680](https://github.com/anomalyco/opencode/issues/49680) — mismo error en subagentes y en `compaction`/`title`.
+
+Síntoma característico: el mismo modelo funciona en `build`/`plan` (built-in,
+sin bloque `permissions`) y falla en el agente custom. **No es un problema de
+modelo** — cambiar de modelo no lo arregla.
+
+Mitigación hasta que se corrija upstream: `"*": ask` en lugar de `"*": deny`.
+Se conserva el control de acceso (todo comando no listado requiere
+aprobación explícita del usuario) sin disparar el bug.
 
 ## 3. Cuerpo del agente
 
@@ -135,6 +160,40 @@ Reglas:
 el `orchestrator`; si se dispara a mano, usar `opencode/big-pickle`
 (versatilidad, sin sesgo estructural) o
 `opencode/muse-spark-1.3-contributor-free` (desglose conceptual).
+
+### 4.2 Fallback de modelos por pasos (agnóstico al proveedor)
+
+OpenCode **no soporta fallback automático de modelos por agente**: no existe
+una lista de modelos priorizados que el runtime recorra ante un fallo
+(rate limit, cuota, error de proveedor). El framework implementa su propio
+sistema, sin ataduras al host:
+
+1. **Cadenas por rol** en `.sdd/config/models.json` (plantilla instalada por
+   `sdd init`): cada rol tiene su cadena ordenada — el primer elemento es el
+   modelo fijado en el frontmatter del agente — y terminada en `inherit`,
+   que quita el pin para seguir el modelo global activo del host.
+2. **Probe agnóstico**: `sdd model health` / `sdd model fallback` prueban
+   cada modelo con HTTP genérico (`openai-chat-completions` o
+   `anthropic-messages` según `providers.<id>.request_style`), con
+   credenciales desde env o archivo JSON (nunca literales en config).
+   Funciona con cualquier proveedor que hable esos protocolos.
+3. **Write-back por rol**: el fallback escribe `model:` en
+   `.opencode/agents/<rol>.md` (atómico: temp + rename) y registra en
+   `.sdd/config/model-health.json`. Si todo falla: exit ≠ 0 con cada error
+   observado y **nada se escribe**.
+4. **Reanudación garantizada**: el fallback no toca tareas, código ni git.
+   Lo avanzado se retoma con `sdd status` (la tarea sigue `IN_PROGRESS`).
+5. **Auto-resolución al arrancar**: el orquestador ejecuta
+   `sdd model health --role orchestrator` al iniciar sesión; si está caído,
+   ejecuta el fallback y anuncia el cambio. Un fallo *mid-sesión* requiere
+   `/model-fallback` manual + reinicio de sesión (el host no expone hooks de
+   error de modelo).
+6. **Fallos nunca silenciosos**: el orquestador informa en voz alta modelo +
+   error + siguiente sugerido. Un harness que falla en silencio pierde su
+   sentido.
+7. **Pin = cabeza de cadena**: el `model:` de cada agente y el primer
+   elemento de su cadena son un solo contrato (test
+   `test_agent_pins_match_chain_heads` en `sdd-storage`).
 
 ## 5. Flujo entre agentes
 

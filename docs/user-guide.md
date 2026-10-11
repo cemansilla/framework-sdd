@@ -12,12 +12,15 @@ Guía práctica para llevar un proyecto desde cero usando el framework SDD.
 ## 2. Instalación
 
 ```bash
+# Instalar el binario globalmente desde GitHub
+cargo install --git https://github.com/cemansilla/framework-sdd sdd-cli
+sdd --version        # sdd 0.1.0
+
+# O compilar desde el repositorio
 git clone https://github.com/cemansilla/framework-sdd
 cd framework-sdd
 cargo build --release
-# el binario queda en target/release/sdd
 export PATH="$PWD/target/release:$PATH"
-sdd --version        # sdd 0.1.0
 ```
 
 ## 3. Inicializar un proyecto
@@ -27,8 +30,11 @@ mkdir mi-proyecto && cd mi-proyecto
 sdd init
 ```
 
-Esto crea la estructura `.sdd/` con plantillas editables y un
-`manifest.json` cuyo `project_id` se deriva del nombre del directorio.
+Esto crea:
+- La estructura `.sdd/` con plantillas editables y un `manifest.json` cuyo
+  `project_id` se deriva del nombre del directorio.
+- Los archivos de proyecto que define el harness: `AGENTS.md`, `.opencode/`
+  (agentes, comandos y skills) y `.gitignore`.
 
 Propiedades de `sdd init`:
 
@@ -36,6 +42,54 @@ Propiedades de `sdd init`:
   archivos que falten).
 - Siempre puede reconstruir las plantillas perdidas sin tocar artefactos
   del usuario.
+
+### Actualizar los archivos de proyecto
+
+Al actualizar el framework conviene refrescar los archivos de proyecto para
+adoptar los agentes y skills de la nueva versión:
+
+```bash
+cargo install --git https://github.com/cemansilla/framework-sdd sdd-cli --force
+sdd init --update
+```
+
+`sdd init --update` sobrescribe `AGENTS.md`, `.opencode/` y `.gitignore` con
+las plantillas de la versión instalada. Los artefactos del usuario en `.sdd/`
+nunca se modifican.
+
+## 3b. Modelos y fallback (agnóstico al proveedor)
+
+Cada rol tiene su cadena ordenada de modelos en
+`.sdd/config/models.json`, terminada en `inherit` (seguir el modelo global
+activo del host). El sistema es del framework, no del proveedor: las cadenas
+son `proveedor/modelo` y el probe es HTTP genérico.
+
+```bash
+sdd model status                    # ver cadenas y última salud (sin red)
+sdd model health --role orchestrator # probar el modelo actual del rol
+sdd model health --all              # probar todos los roles
+sdd model fallback --role coder     # fijar el primer modelo sano
+sdd model report --role coder -e "429 rate limit"  # registrar un fallo visto
+```
+
+Reglas:
+
+- El fallback **solo** escribe `.opencode/agents/<rol>.md` (el `model:`) y
+  `.sdd/config/model-health.json`. Tareas, código y git quedan intactos: lo
+  avanzado se reanuda con `sdd status`, no se rehace.
+- Orden de selección: primero sano verificado; si nada es verificable
+  (típico del free tier, cuya puerta solo admite sesiones vivas), rota al
+  siguiente de la cadena **diciéndolo explícitamente**; `inherit` es el
+  último recurso (quita el pin).
+- Si la cadena se agota sin nada sano, el comando sale con error, lista cada
+  fallo y **no escribe nada**. Nunca hay degradación silenciosa.
+- El orquestador verifica su salud al iniciar cada sesión y se auto-recupera
+  solo ante un fallo **verificado**; ante `UNTESTABLE` avisa y sigue. Un
+  fallo en mitad de sesión se recupera con `/model-fallback` (o el comando)
+  + reinicio de sesión: el host no expone hooks de error de modelo.
+- Credenciales por variable de entorno o archivo JSON (ver `providers` en
+  `models.json`); nunca literales en config versionada. Sin credencial
+  utilizable, el probe informa `UNTESTABLE` en vez de inventar un fallo.
 
 ## 4. Flujo de trabajo SDD
 

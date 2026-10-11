@@ -27,7 +27,7 @@ permission:
     cargo check *: allow
     git status: allow
     git diff *: allow
-    "*": deny
+    "*": ask
   task: deny
   todowrite: allow
 ---

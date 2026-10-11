@@ -8,7 +8,7 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 | Agente | Sub-comando | Modelo por defecto (GRATIS) | Alternativa de pago (manual vía `/models`) | Mode | Rol Principal |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Orquestador** | `/orchestrate` | `opencode/longcat-2.5-preview-free` | `opencode-go/qwen3.7-plus` | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
+| **Orquestador** | `/orchestrate` | `opencode/longcat-2.5-preview-free` (cabeza de su cadena; ver fallback abajo) | cadena `inherit` → global | `primary` | Analizar contexto, enrutar tareas y controlar el flujo SDD. |
 | **Arquitecto** | `/plan` | `opencode/nemotron-3-ultra-free` | `opencode-go/kimi-k3` | `subagent` | Diseño de arquitectura, contratos de API e interfaces. |
 | **Planificador** | `/tasks` | `opencode/ling-3.0-flash-fin-free` | `opencode-go/qwen3.7-plus` | `subagent` | Desglose de especificaciones en tareas granulares. |
 | **Desarrollador** | `/implement` | `opencode/big-pickle` | `opencode-go/kimi-k2.7-code` | `subagent` | Escritura, modificación y refactorización de código Rust. |
@@ -17,8 +17,20 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 
 **Notas de modelos:**
 
-- Todos los defaults son **gratuitos** (`$0/Mtok` en OpenCode Zen) y viven en
-  `.opencode/agents/*.md` + `opencode.json` (`model`, `small_model`).
+- **Fallback de modelos por pasos** (agnóstico al proveedor): cada rol tiene
+  su cadena ordenada en `.sdd/config/models.json`, terminada en `inherit`
+  (quita el pin y sigue el modelo global activo del host). Ante un fallo de
+  modelo: `sdd model health --role <rol>` lo detecta, `sdd model fallback
+  --role <rol>` prueba la cadena y fija el primero sano, `/model-fallback`
+  es el atajo. Solo toca `.opencode/agents/<rol>.md` y
+  `.sdd/config/model-health.json`: tareas, código y git quedan intactos para
+  reanudar. Si todo falla: exit ≠ 0 con cada error, nada se escribe.
+- Los **subagentes conservan su modelo fijado por rol** (tabla de arriba =
+  cabeza de su cadena). El pin de cada agente y la cabeza de su cadena son
+  un solo contrato (test `test_agent_pins_match_chain_heads`).
+- **Fallos nunca silenciosos**: ante un error de modelo o proveedor, el
+  orquestador debe informarlo en voz alta (modelo + error + siguiente modelo
+  sugerido). Nunca inventar resultados ni degradar el flujo en silencio.
 - Los modelos de pago (`opencode-go/*`, `openai/*`) **siguen disponibles**
   para selección manual con `/models`; nada está deshabilitado.
 - `small_model` (`opencode/mimo-v2.6-flash-free`) cubre títulos, resúmenes y
@@ -99,6 +111,23 @@ Este documento define la matriz de agentes del framework SDD, la asignación de 
 - El agente NO elimina branches remotas.
 - El agente termina su trabajo en el paso 5 (push + PR creado).
 - La revisión, aprobación y merge son responsabilidad exclusiva del usuario.
+
+---
+
+## Regla Crítica: `bash: "*": ask` en Todos los Agentes
+
+Ningún agente debe terminar su bloque `bash` con `"*": deny`. **Usar `"*": ask`.**
+
+Los modelos gratuitos de OpenCode Zen rechazan la sesión con
+`AI_APICallError: OpenCode's free tier can only be used from within OpenCode`
+cuando el agente tiene permisos restrictivos de `bash`. El síntoma es que el
+mismo modelo funciona en `build`/`plan` (built-in) y falla en los agentes
+custom del harness — **no es un problema de modelo**.
+
+Upstream: [#50627](https://github.com/anomalyco/opencode/issues/50627),
+[#53347](https://github.com/anomalyco/opencode/issues/53347),
+[#49680](https://github.com/anomalyco/opencode/issues/49680).
+Detalle en [`docs/agent-authoring.md`](docs/agent-authoring.md#permisos-y-free-tier-de-opencode-zen--deny-rompe-el-free-tier).
 
 ---
 
